@@ -1,19 +1,29 @@
 @extends("layout.main")
 @section("title", "Gestion des utilisateurs")
 @section("content")
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Profile de {{ $utilisateur->nom }} {{ $utilisateur->prenoms }}</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Acceuil</a></li>
+              <li class="breadcrumb-item active">Modifications de  Profile</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-3">
-
-          @if($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
@@ -23,14 +33,13 @@
                        src="{{ asset('storage/utilisateurs/' . $utilisateur->avatar) }}"
                        alt="User profile picture">
                 </div>
-                <form action="" method="POST" enctype="multipart/form-data">                @csrf
+                <form action="{{ route('utilisateurs.update-avatar', $utilisateur) }}" method="POST" enctype="multipart/form-data">                @csrf
                 @method('PUT')
                 <input type="file" name="avatar" id="avatar">
                 <button type="submit" class="btn btn-primary">Mettre à jour</button>
                 </form>
 
                 <h3 class="profile-username text-center">{{ $utilisateur->nom }} {{ $utilisateur->prenoms }}</h3>
-                
 
                 <p class="text-center {{ $utilisateur->lieu_habitation ? 'text-muted' : 'text-danger' }}">
                         {{ $utilisateur->lieu_habitation ?? 'Lieu d\'habitation non renseigné' }}
@@ -59,15 +68,13 @@
                     <b>Login</b> <a class="float-right">{{ $utilisateur->login }}</a>
                   </li>
                   <li class="list-group-item">
-                    
+                    <b>Date de création</b> <a class="float-right">{{ $utilisateur->created_at->format('d/m/Y') }}</a>
                   </li>
                 </ul>
               </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
-
-
           </div>
           <!-- /.col -->
           <div class="col-md-9">
@@ -76,16 +83,15 @@
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#editInfo" data-toggle="tab">Modifier mes informations</a></li>
                   <li class="nav-item"><a class="nav-link" href="#changePassword" data-toggle="tab">Changer mon mot de passe</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="editInfo">
                   <div class="tab-pane" id="settings">
-                    <form class="form-horizontal" action="" method="POST">
-                      @csrf
-                      @method('PUT')
+                  <form class="form-horizontal" action="{{ route('utilisateurs.update', $utilisateur->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Nom</label>
                         <div class="col-sm-10">
@@ -134,7 +140,7 @@
                   <div class="tab-pane" id="changePassword">
                     <!-- The timeline -->
 
-                    <form action="" method="POST">
+                    <form action="{{ route('utilisateurs.change-password', $utilisateur) }}" method="POST">
                       @csrf
                       <div class="form-group row">
                         <label for="ancien_password" class="col-sm-2 col-form-label">Ancien mot de passe</label>
@@ -237,6 +243,8 @@
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->
-
+    </section>
+    <!-- /.content -->
+  </div>
 
 @endsection

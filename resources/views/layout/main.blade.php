@@ -307,15 +307,15 @@
               <a href="#" class="nav-link">
                 <i class="fas fa-male"></i>
                 <p>
-                  Clients
+                  Service de livraison
                   <i class="fas fa-angle-left right"></i>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="clients.php" class="nav-link">
+                  <a href="{{route('delivery_services.index')}}" class="nav-link">
                     <i class="fas fa-user-alt"></i>
-                    <p>Liste des clients</p>
+                    <p>Liste des services de livraison</p>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -366,13 +366,13 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="" class="nav-link">
+                  <a href="{{route('utilisateurs.gestionnaires')}}" class="nav-link">
                     <i class="fas fa-male	"></i>
                     <p>Gestionnaires</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="" class="nav-link">
+                  <a href="{{route('utilisateurs.livreurs')}}" class="nav-link">
                   <i class="fas fa-user-tie"></i>
                     <p>Livreurs</p>
                   </a>
