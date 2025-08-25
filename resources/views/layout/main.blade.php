@@ -27,6 +27,9 @@
   <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+
+  <!-- Favicon -->
+  <link rel="icon" href="{{ asset('img/favicon.ico') }}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -315,13 +318,37 @@
                 <li class="nav-item">
                   <a href="{{route('delivery_services.index')}}" class="nav-link">
                     <i class="fas fa-user-alt"></i>
-                    <p>Liste des services de livraison</p>
+                    <p>Liste des services</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="pages/UI/general.html" class="nav-link">
+                  <a href="" class="nav-link">
                     <i class="fas fa-user-tie"></i>
-                    <p>Particulier</p>
+                    <p>Associer un gérant</p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-taxi"></i>
+              
+                <p>
+                  Boutiques
+                  <i class="fas fa-angle-left right"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{{route('boutiques.index')}}" class="nav-link">
+                    <i class="fas fa-bicycle"></i>
+                    <p>Listes des boutiques</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="contrats.php" class="nav-link">
+                    <i class="fas fa-folder-open"></i>
+                    <p>Contrats</p>
                   </a>
                 </li>
               </ul>
@@ -389,7 +416,7 @@
               </ul>
             </li>
              <li class="nav-item">
-              <a href="" class="nav-link">
+              <a href="{{route('cout_livraisons.index')}}" class="nav-link">
                 <i class="nav-icon far fa-calendar-alt"></i>
                 <p>
                   Coût Livraison

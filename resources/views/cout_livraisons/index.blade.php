@@ -32,9 +32,9 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ $delivery_services->count() }}</h3>
+                <h3>0</h3>
 
-                <p>Services de livraison Total</p>
+                <p>Fisher</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -62,9 +62,9 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-              <h3>{{ $delivery_services->count() }}</h3>
+              <h3>0</h3>
 
-                <p>Livreurs</p>
+                <p>Administrateurs</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -79,7 +79,7 @@
               <div class="inner">
               <h3>0</h3>
 
-                <p>Clients</p>
+                <p>Administrateurs</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -106,8 +106,8 @@
 <h1 class="text-center">Liste des services de livraison</h1>
  <!--   Début container pour le menu -->
     <div class="block-container">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
-          <i class="fa fa-user-plus"></i> Enregistrer un service de livraison
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCoutLivraisonModal">
+          <i class="fa fa-user-plus"></i> Enregistrer un cout de livraison
       </button>
 
 
@@ -129,67 +129,33 @@
 
      <table id="example2" class="table table-bordered table-hover">
 
-             <thead>
+             <thead style="text-align: center; color: #FFF; background-color: #000;">
                 <tr>
-                <th>Logo</th>
-                    <th>Nom service</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Adresse</th>
-                    <th>Gérants</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
+                 <th>Icones</th>   
+                <th>Cout livraison</th>
+                <th>Actions</th>
                 </tr>
              </thead>
              <tbody>
-                @foreach ($delivery_services as $delivery_service)
+                @foreach ($coutLivraisons as $coutLivraison)
                 <tr>
+                 <td>
+                    <img src="{{ asset('img/money.png') }}" 
+                        alt="Logo" 
+                        width="40">
+                </td>
+                <td style="font-size: 20px;"><strong>{{ $coutLivraison->cout_livraison }}</strong></td>
+                   
+                    
                     <td>
-                        <a href="{{ route('delivery_services.profile', $delivery_service->id) }}">
-                            <img src="{{ asset('storage/delivery_services/' . $delivery_service->logo) }}" 
-                                alt="Avatar" 
-                                class="img-circle" 
-                                style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
-                                title="Voir le profil">
+                        <a href="#" 
+                            class="btn btn-primary edit-cout-livraison" 
+                            data-id="{{ $coutLivraison->id }}">
+                            <i class="fas fa-edit"></i>
                         </a>
-                    </td>
-                    <td>{{ $delivery_service->nom }}</td>
-                    <td>{{ $delivery_service->email }}</td>
-                    <td>{{ $delivery_service->telephone }}</td>
-                    <td>{{ $delivery_service->adresse }}</td>
-                    <td>
-                      @forelse($delivery_service->utilisateurs as $user)
-                          {{ $user->nom }} {{ $user->prenoms }} <br>
-                      @empty
-                          <span class="badge badge-danger">Pas de gérant associé</span>
-                      @endforelse
-                    </td>
-                    <td>
-                        @if ($delivery_service->email_verified)
-                            <img src="{{ asset('icones/checked.png') }}" 
-                                alt="Logo" 
-                                width="40">
-                        @else
-                            <img src="{{ asset('icones/non_checked.png') }}" 
-                                alt="Logo" 
-                                width="40">
-                        @endif
-                    </td>
-                    <td>
-                    <a href="javascript:void(0)" 
-                        class="btn btn-primary editServiceBtn" 
-                        data-id="{{ $delivery_service->id }}"
-                        data-nom="{{ $delivery_service->nom }}"
-                        data-email="{{ $delivery_service->email }}"
-                        data-telephone="{{ $delivery_service->telephone }}"
-                        data-adresse="{{ $delivery_service->adresse }}"
-                        data-toggle="modal" 
-                        data-target="#updateServiceModal">
-                        <i class="fa fa-edit"></i>
-                    </a>
                         
 
-                        <form action="{{ route('delivery_services.destroy', $delivery_service->id) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('cout_livraisons.destroy', $coutLivraison->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -207,8 +173,8 @@
     </section>
    
   </div>
-  @include('delivery_services.modals.add')
-  @include('delivery_services.modals.update')
+  @include('cout_livraisons.modals.add')
+  @include('cout_livraisons.modals.update')
 
   <!-- Modal de Succès -->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">

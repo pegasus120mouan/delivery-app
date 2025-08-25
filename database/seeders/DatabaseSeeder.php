@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UtilisateursTableSeeder::class,
             DeliveryServiceSeeder::class,
+            CoutLivraisonsTableSeeder::class,
+            BoutiqueSeeder::class,
             // Ajoutez d'autres seeders ici si nécessaire
         ]);
     }

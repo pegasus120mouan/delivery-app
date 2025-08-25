@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Liste des services de livraison')
+@section('title', 'Liste des boutiques')
 
 @section('content')
 
@@ -10,12 +10,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Gestion des services de livraison</h1>
+            <h1 class="m-0">Gestion des boutiques</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">{{ Auth::user()->role }}</a></li>
-              <li class="breadcrumb-item active">Services de livraison</li>
+              <li class="breadcrumb-item active">Boutiques</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -32,9 +32,9 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ $delivery_services->count() }}</h3>
+                <h3>{{ $boutiques->count() }}</h3>
 
-                <p>Services de livraison Total</p>
+                <p>Boutiques Total</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -62,7 +62,7 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-              <h3>{{ $delivery_services->count() }}</h3>
+              <h3>{{ $boutiques->count() }}</h3>
 
                 <p>Livreurs</p>
               </div>
@@ -103,13 +103,13 @@
     }
    </style>
 
-<h1 class="text-center">Liste des services de livraison</h1>
+<h1 class="text-center">Liste des boutiques</h1>
  <!--   Début container pour le menu -->
     <div class="block-container">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
-          <i class="fa fa-user-plus"></i> Enregistrer un service de livraison
+       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBoutiqueModal">
+          <i class="fa fa-user-plus"></i> Enregistrer une boutique
       </button>
-
+  
 
 
        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#add-point">
@@ -131,65 +131,74 @@
 
              <thead>
                 <tr>
-                <th>Logo</th>
-                    <th>Nom service</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>Adresse</th>
-                    <th>Gérants</th>
+                 <th>Logo</th>
+                 <th>Nom boutique</th>
+                 <th>Email</th>
+                 <th>Telephone</th>
+                 <th>Adresse</th>
+                 <th>Commune</th>
+                    <th>Responsable</th>
                     <th>Statut</th>
                     <th>Actions</th>
                 </tr>
              </thead>
              <tbody>
-                @foreach ($delivery_services as $delivery_service)
+              @foreach ($boutiques as $boutique)
                 <tr>
                     <td>
-                        <a href="{{ route('delivery_services.profile', $delivery_service->id) }}">
-                            <img src="{{ asset('storage/delivery_services/' . $delivery_service->logo) }}" 
-                                alt="Avatar" 
-                                class="img-circle" 
-                                style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
-                                title="Voir le profil">
+                        <a href="#" class="update-logo-btn" data-bs-toggle="modal" data-bs-target="#logoModal" data-service-id="{{ $boutique->id }}">
+                        <img src="{{ asset('storage/boutiques/' . $boutique->logo) }}"  
+                                alt="Logo" 
+                                width="50" 
+                                class="img-thumbnail"
+                                style="cursor: pointer;"
+                                title="Cliquez pour changer le logo">
                         </a>
                     </td>
-                    <td>{{ $delivery_service->nom }}</td>
-                    <td>{{ $delivery_service->email }}</td>
-                    <td>{{ $delivery_service->telephone }}</td>
-                    <td>{{ $delivery_service->adresse }}</td>
+                    <td>{{ $boutique->nom_boutique }}</td>
+                    <td>{{ $boutique->email }}</td>
+                    <td>{{ $boutique->telephone }}</td>
+                    <td>{{ $boutique->adresse }}</td>
+                    <td>{{ $boutique->commune }}</td>
+                    <td>{{ $boutique->responsable }}</td>
                     <td>
-                      @forelse($delivery_service->utilisateurs as $user)
-                          {{ $user->nom }} {{ $user->prenoms }} <br>
-                      @empty
-                          <span class="badge badge-danger">Pas de gérant associé</span>
-                      @endforelse
-                    </td>
-                    <td>
-                        @if ($delivery_service->email_verified)
-                            <img src="{{ asset('icones/checked.png') }}" 
+                        @if ($boutique->email_verified)
+                            <img src="{{ asset('img/verified.png') }}" 
                                 alt="Logo" 
                                 width="40">
                         @else
-                            <img src="{{ asset('icones/non_checked.png') }}" 
+                            <img src="{{ asset('img/non_verified.png') }}" 
                                 alt="Logo" 
                                 width="40">
                         @endif
                     </td>
                     <td>
+                        <a href="#" 
+                            class="btn btn-primary edit-boutique"
+                            data-id="{{ $boutique->id }}">
+                            <i class="fas fa-edit"></i>
+                          </a>
+                        <form action="{{ route('boutiques.destroy', $boutique->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger"> <i class="fas fa-trash"></i></button>
+                        </form>
+                    </td>
+                    <td>
                     <a href="javascript:void(0)" 
                         class="btn btn-primary editServiceBtn" 
-                        data-id="{{ $delivery_service->id }}"
-                        data-nom="{{ $delivery_service->nom }}"
-                        data-email="{{ $delivery_service->email }}"
-                        data-telephone="{{ $delivery_service->telephone }}"
-                        data-adresse="{{ $delivery_service->adresse }}"
+                        data-id="{{ $boutique->id }}"
+                        data-nom="{{ $boutique->nom }}"
+                        data-email="{{ $boutique->email }}"
+                        data-telephone="{{ $boutique->telephone }}"
+                        data-adresse="{{ $boutique->adresse }}"
                         data-toggle="modal" 
                         data-target="#updateServiceModal">
                         <i class="fa fa-edit"></i>
                     </a>
                         
 
-                        <form action="{{ route('delivery_services.destroy', $delivery_service->id) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('boutiques.destroy', $boutique->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -207,8 +216,8 @@
     </section>
    
   </div>
-  @include('delivery_services.modals.add')
-  @include('delivery_services.modals.update')
+        @include('boutiques.modals.add')
+        <!--@include('boutiques.modals.update')-->
 
   <!-- Modal de Succès -->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">

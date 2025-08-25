@@ -21,7 +21,14 @@ return new class extends Migration
             $table->boolean('email_verified')->default(false);
             $table->string('email_verification_token')->nullable();
             $table->timestamps();
+
+            // CLÉ ÉTRANGÈRE POUR LES LIVREURS
+            $table->foreignId('delivery_service_id')
+            ->nullable()
+            ->constrained('delivery_services')
+            ->onDelete('set null'); 
         });
+        
     }
 
     /**

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Notifications\Notifiable; // Ajouter cette ligne
+use Illuminate\Support\Facades\Storage;
+use App\Models\Utilisateur;
 
 
 
@@ -18,9 +20,14 @@ class DeliveryServiceController extends Controller
      */
     public function index()
     {
-        $delivery_services = DeliveryService::all();
+       // $delivery_services = DeliveryService::all();
+      //  return view('delivery_services.index', compact('delivery_services'));
+
+        $delivery_services = DeliveryService::with('utilisateurs')->get();
         return view('delivery_services.index', compact('delivery_services'));
     }
+
+    
 
     /**
      * Show the form for creating a new resource.
@@ -103,7 +110,7 @@ public function verifyEmail($token)
      */
     public function show(DeliveryService $deliveryService)
     {
-        //
+        return response()->json($deliveryService);
     }
 
     /**
@@ -119,7 +126,37 @@ public function verifyEmail($token)
      */
     public function update(Request $request, DeliveryService $deliveryService)
     {
-        //
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'telephone' => 'required|string|max:20',
+            'adresse' => 'required|string|max:255',
+        ]);
+
+        $deliveryService->update($validated);
+        return redirect()->route('delivery_services.profile', $deliveryService->id)
+                     ->with('popup', true);
+    }
+
+    public function updateLogo(Request $request, DeliveryService $deliveryService)
+    {
+        $request->validate([
+            'logo' => 'required|image|max:2048', // Vérifie que c'est une image, max 2 Mo
+        ]);
+    
+        // Supprimer l'ancien logo s'il existe
+        if ($deliveryService->logo) {
+            Storage::disk('public')->delete('delivery_services/' . $deliveryService->logo);
+        }
+    
+        // Stocker la nouvelle image
+        $logoName = time() . '.' . $request->logo->extension();
+        $request->logo->storeAs('delivery_services', $logoName, 'public');
+    
+        // Mettre à jour le champ avatar dans la base de données
+        $deliveryService->update(['logo' => $logoName]);
+    
+        return redirect()->back()->with('success', 'Logo mis à jour avec succès.');
     }
 
     /**
@@ -127,13 +164,45 @@ public function verifyEmail($token)
      */
     public function destroy(DeliveryService $deliveryService)
     {
-        //
+        $deliveryService->delete();
+        return redirect()->route('delivery_services.index')
+                     ->with('success', 'Service de livraison supprimé avec succès.');
     }
 
-    public function profile(DeliveryService $deliveryService)
-    {
-        return view('delivery_services.profile', compact('deliveryService'));
-    }
+                public function profile($id)
+            {
+                $deliveryService = DeliveryService::with('utilisateurs')->findOrFail($id);
+
+                // On récupère uniquement les utilisateurs qui ont le rôle "gerant"
+                $gerants = Utilisateur::where('role', 'gerant')->get();
+
+                return view('delivery_services.profile', compact('deliveryService', 'gerants'));
+            }
+
+    public function editGerant($id)
+{
+    $delivery_service = DeliveryService::findOrFail($id);
+
+    // Récupérer seulement les utilisateurs avec role = 'gerant'
+    $gerants = Utilisateur::where('role', 'gerant')->get();
+
+    return view('delivery_services.associer_gerant', compact('delivery_service', 'gerants'));
+}
+
+
+public function updateGerant(Request $request, $id)
+{
+    $delivery_service = DeliveryService::findOrFail($id);
+
+    // Associer l’utilisateur choisi au service
+    $delivery_service->utilisateurs()->syncWithoutDetaching([$request->gerant_id]);
+
+  //  return redirect()->route('delivery_services.index')
+                   //  ->with('success', 'Gérant associé avec succès au service.');
+
+                     return redirect()->route('delivery_services.profile', $delivery_service)
+            ->with('success', 'Gérant associé avec succès au service.');
+}
 
 
 }

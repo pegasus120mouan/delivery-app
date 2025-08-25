@@ -33,10 +33,11 @@
                        src="{{ asset('storage/delivery_services/' . $deliveryService->logo) }}"
                        alt="User profile picture">
                 </div>
-                <form action="" method="POST" enctype="multipart/form-data">                @csrf
-                @method('PUT')
-                <input type="file" name="logo" id="logo">
-                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                <form action="{{ route('delivery_services.update-logo', $deliveryService) }}" method="POST" enctype="multipart/form-data">                
+                  @csrf
+                  @method('PUT')
+                  <input type="file" name="logo" id="logo">
+                  <button type="submit" class="btn btn-primary">Mettre à jour</button>
                 </form>
 
                 <h3 class="profile-username text-center">{{ $deliveryService->nom }}</h3>
@@ -63,6 +64,15 @@
                        @endif</a>
                   </li>
                   <li class="list-group-item">
+                    <b>Gérant</b> <a class="float-right">
+                      @forelse($deliveryService->utilisateurs as $user)
+                          {{ $user->nom }} {{ $user->prenoms }} <br>
+                      @empty
+                          <span class="badge badge-danger">Pas de gérant associé</span>
+                      @endforelse
+                    </a>
+                  </li>
+                  <li class="list-group-item">
                     <b>Date de création</b> <a class="float-right">{{ $deliveryService->created_at->format('d/m/Y') }}</a>
                   </li>
                 </ul>
@@ -76,13 +86,13 @@
             <div class="card">
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#editInfo" data-toggle="tab">Modifier mes informations</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#changePassword" data-toggle="tab">Changer mon mot de passe</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#editServiceInfo" data-toggle="tab">Modifier mes informations</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#attribuerGerant" data-toggle="tab">Attribuer un gérant</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
-                  <div class="active tab-pane" id="editInfo">
+                  <div class="active tab-pane" id="editServiceInfo">
                   <div class="tab-pane" id="settings">
                   <form class="form-horizontal" action="{{ route('delivery_services.update', $deliveryService->id) }}" method="POST">
                             @csrf
@@ -96,13 +106,19 @@
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Téléphone</label>
                         <div class="col-sm-10">
-                          <input type="text" name="telephone" value="{{ $deliveryService->telephone }}" class="form-control" id="inputEmail" placeholder="Prénoms">
+                          <input type="text" name="telephone" value="{{ $deliveryService->telephone }}" class="form-control" id="inputEmail" placeholder="Téléphone">
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputSkills" class="col-sm-2 col-form-label">E-mail</label>
+                        <label for="inputEmail" class="col-sm-2 col-form-label">E-mail</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" name="email" value="{{ $deliveryService->email }}" id="inputSkills" placeholder="E-mail">
+                          <input type="email" name="email" value="{{ $deliveryService->email }}" class="form-control" id="inputEmail" placeholder="Email">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Adresse</label>
+                        <div class="col-sm-10">
+                          <input type="text" name="adresse" value="{{ $deliveryService->adresse }}" class="form-control" id="inputSkills" placeholder="Adresse">
                         </div>
                       </div>
                       <div class="form-group row">
@@ -114,50 +130,32 @@
                   </div>
                   </div>
                   <!-- /.tab-pane -->
-                  <div class="tab-pane" id="changePassword">
+                  <div class="tab-pane" id="attribuerGerant">
                     <!-- The timeline -->
 
-                    <form action="" method="POST">
-                      @csrf
-                      <div class="form-group row">
-                        <label for="ancien_password" class="col-sm-2 col-form-label">Ancien mot de passe</label>
-                        <div class="col-sm-10">
-                          <input type="password" name="ancien_password" id="ancien_password" class="form-control @error('ancien_password') is-invalid @enderror" placeholder="Veuillez entrer votre ancien mot de passe" required>
-                          @error('ancien_password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                          @enderror
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="nouveau_password" class="col-sm-2 col-form-label">Nouveau mot de passe</label>
-                        <div class="col-sm-10">
-                          <input type="password" name="nouveau_password" id="nouveau_password" class="form-control @error('nouveau_password') is-invalid @enderror" placeholder="Veuillez entrer votre nouveau mot de passe" required>
-                          @error('nouveau_password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                          @enderror
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="confirmer_nouveau_password" class="col-sm-2 col-form-label">Confirmer le mot de passe</label>
-                        <div class="col-sm-10">
-                          <input type="password" name="confirmer_nouveau_password" id="confirmer_nouveau_password" class="form-control @error('confirmer_nouveau_password') is-invalid @enderror" placeholder="Veuillez confirmer votre nouveau mot de passe" required>
-                          @error('confirmer_nouveau_password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                          @enderror
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-10">
-                          <button type="submit" class="btn btn-large btn-danger">Modifier mon mot de passe</button>
-                        </div>
-                      </div>
-                    </form>
+                    <form action="{{ route('delivery_services.updateGerant', $deliveryService->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="form-group">
+                <label for="gerant_id">Choisir un gérant</label>
+                <select name="gerant_id" id="gerant_id" class="form-control" required>
+                    <option value="">-- Sélectionner --</option>
+                    @foreach($gerants as $gerant)
+                        <option value="{{ $gerant->id }}">
+                            {{ $gerant->nom }} {{ $gerant->prenoms }} ({{ $gerant->email }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Associer
+            </button>
+            <a href="{{ route('delivery_services.index') }}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </form>
                   </div>
                   <!-- /.tab-pane -->
 

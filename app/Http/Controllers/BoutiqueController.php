@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Boutique;
+use Illuminate\Http\Request;
+
+class BoutiqueController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $boutiques = Boutique::all();
+        return view('boutiques.index', compact('boutiques'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nom_boutique' => 'required|string|max:255',
+            'adresse' => 'required|string',
+            'commune' => 'required|string|max:255',
+            'telephone' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'responsable' => 'required|string|max:255',
+            // Supprimer les champs created_at et updated_at de la validation
+        ]);
+    
+        // Ajouter le statut par défaut
+        $validated['statut'] = 'Inactive';
+    
+        try {
+            Boutique::create($validated);
+            return redirect()->route('boutiques.index')
+                ->with('success', 'Boutique créée avec succès !');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la création de la boutique : ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Boutique $boutique)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Boutique $boutique)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Boutique $boutique)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Boutique $boutique)
+    {
+        //
+    }
+}

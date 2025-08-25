@@ -33,7 +33,8 @@
                        src="{{ asset('storage/utilisateurs/' . $utilisateur->avatar) }}"
                        alt="User profile picture">
                 </div>
-                <form action="{{ route('utilisateurs.update-avatar', $utilisateur) }}" method="POST" enctype="multipart/form-data">                @csrf
+                <form action="{{ route('utilisateurs.update-avatar', $utilisateur) }}" method="POST" enctype="multipart/form-data">                
+                  @csrf
                 @method('PUT')
                 <input type="file" name="avatar" id="avatar">
                 <button type="submit" class="btn btn-primary">Mettre à jour</button>
