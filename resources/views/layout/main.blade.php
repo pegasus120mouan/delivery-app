@@ -28,6 +28,12 @@
   <!-- summernote -->
   <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
 
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWd4r2fNp4P9F1wagyJ7kUnYFPQQg4HI7Qd1uTJoV2LDh7AHXJ3u3EV5Zw80rA+5r+Z1QQQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
   <!-- Favicon -->
   <link rel="icon" href="{{ asset('img/favicon.ico') }}">
 </head>
@@ -50,7 +56,7 @@
         <a href="#" class="nav-link">Acceuil</a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="" class="nav-link">Commandes</a>
+        <a href="{{ route('commandes.index') }}" class="nav-link">Commandes</a>
       </li>
     </ul>
 
@@ -190,9 +196,9 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-      <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+    <a href="#" class="brand-link">
+      <img src="{{ asset('logo/logo.png') }}" alt="Colissas Logo" class="brand-image img-circle elevation-3" style="opacity: .8; width:50px; height:50px;">
+      <span class="brand-text font-weight-light">Colissas</span>
     </a>
 
     <!-- Sidebar -->
@@ -200,7 +206,8 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ asset('storage/utilisateurs/' . (Auth::user()->avatar ?? 'user2-160x160.jpg')) }}"     
+          class="img-circle elevation-2" alt="User Image" style="width:50px; height:50px;">
         </div>
         <div class="info">
           <a href="#" class="d-block">{{ Auth::user()->nom }} {{ Auth::user()->prenoms }}</a>
@@ -234,15 +241,15 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="" class="nav-link active">
+                  <a href="{{ route('commandes.point_du_jour') }}" class="nav-link active">
                     <i class="fas fa-motorcycle"></i>
-                    <p>Bilan aujourd'hui</p>
+                    <p>Point du jour</p>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a href="vuegeneral.php" class="nav-link">
                     <i class="fas fa-bicycle"></i>
-                    <p>Bilan Hier</p>
+                    <p>Point hier</p>
                   </a>
                 </li>
               </ul>
@@ -258,15 +265,15 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="point_client.php" class="nav-link">
+                  <a href="{{ route('points_livreurs.index') }}" class="nav-link">
                     <i class="fas fa-balance-scale"></i>
-                    <p>Points par clients</p>
+                    <p>Points des livreurs</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="point_livraison.php" class="nav-link">
+                  <a href="{{ route('points_livreurs.index') }}" class="nav-link">
                     <i class="fas fa-wallet"></i>
-                    <p>Points des Livreurs</p>
+                    <p>Points des clients</p>
                   </a>
                 </li>
                  <li class="nav-item">
@@ -287,7 +294,7 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
-                  <a href="" class="nav-link">
+                  <a href="{{route('commandes.index')}}" class="nav-link">
                     <i class="fas fa-clone"></i>
                     <p>Liste des commandes</p>
                   </a>
@@ -672,5 +679,6 @@
 <script src="{{ asset('dist/js/demo.js') }}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

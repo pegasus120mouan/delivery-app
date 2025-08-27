@@ -38,7 +38,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Redirection vers utilisateurs.index
-            return redirect()->route('utilisateurs.index');
+            return redirect()->route('commandes.index');
         }
 
         return back()->withErrors([

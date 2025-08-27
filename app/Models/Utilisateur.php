@@ -68,5 +68,10 @@ class Utilisateur extends Authenticatable
     {
         return $query->where('role', 'livreur');
     }
+
+    public function boutiques()
+{
+    return $this->belongsToMany(Boutique::class, 'boutique_utilisateur', 'utilisateur_id', 'boutique_id');
+}
     
 }

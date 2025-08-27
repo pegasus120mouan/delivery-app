@@ -6,6 +6,10 @@ use App\Http\Controllers\CoutLivraisonController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeliveryServiceController;
 use App\Http\Controllers\BoutiqueController;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\PointController;
+use App\Http\Controllers\pointLivreurController;
+
 
 
 
@@ -51,8 +55,41 @@ Route::resource("utilisateurs", UtilisateurController::class);
 
 
 /* Route Boutique */
+Route::get('/boutiques/{boutique}/profile', [BoutiqueController::class, 'profile'])->name('boutiques.profile');
+Route::put('boutiques/{boutique}/associer-client', [BoutiqueController::class, 'updateClient'])->name('boutiques.updateClient');
+
 Route::resource('boutiques', BoutiqueController::class);
 /* Fin route Boutique */
 
 /* Route cout-livraison */
 Route::resource('cout_livraisons', CoutLivraisonController::class);
+
+
+
+/******************************Commandes*************************************** */
+Route::post('/commandes/attribuer-livreur', [CommandeController::class, 'attribuerLivreur'])
+     ->name('commandes.attribuerLivreur');
+
+Route::post('/commandes/change-statut', [CommandeController::class, 'changeStatut'])
+     ->name('commandes.changeStatut');
+
+Route::post('/commandes/change-boutique', [CommandeController::class, 'changeBoutique'])
+     ->name('commandes.changeBoutique');
+
+Route::get('/commandes/point-du-jour', [CommandeController::class, 'pointDuJour'])
+     ->name('commandes.point_du_jour');
+
+//Route::resource('commandes', CommandeController::class);
+//Route::resource('commandes', CommandeController::class);
+Route::resource('/commandes', CommandeController::class)->middleware('auth');
+
+
+
+Route::post('/point/imprimer', [PointController::class, 'imprimer'])->name('point.imprimer')->middleware('auth');
+
+
+
+
+Route::resource('points_livreurs', pointLivreurController::class);
+
+

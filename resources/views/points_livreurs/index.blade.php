@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Liste des boutiques')
+@section('title', 'Points des livreurs')
 
 @section('content')
 
@@ -10,12 +10,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Liste des boutiques</h1>
+            <h1 class="m-0">Gestion des points des livreurs</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">{{ Auth::user()->role }}</a></li>
-              <li class="breadcrumb-item active">Boutiques</li>
+              <li class="breadcrumb-item active">Points des livreurs</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -32,9 +32,9 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ $boutiques->count() }}</h3>
+                <h3> {{ $pointsLivreurs->count() ?? 0 }}</h3>
 
-                <p>Boutiques Total</p>
+                <p>Points Total</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -47,9 +47,9 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-              <h3>0</h3>
+              <h3> {{ $pointsLivreurs->where('statut', 'livré')->count() ?? 0 }}</h3>
 
-                <p>Administrateurs</p>
+                <p>Points Livrés</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -60,11 +60,11 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-warning">
+            <div class="small-box bg-danger">
               <div class="inner">
-              <h3>{{ $boutiques->count() }}</h3>
+              <h3>{{ $pointsLivreurs->where('statut', 'Non Livré')->count() ?? 0 }}</h3>
 
-                <p>Livreurs</p>
+                <p>Points Non Livrés</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -75,11 +75,11 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-warning">
               <div class="inner">
-              <h3>0</h3>
+              <h3>{{ $pointsLivreurs    ->where('statut', 'Retourné')->count() ?? 0 }}</h3>
 
-                <p>Clients</p>
+                <p>Points Retournés</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
@@ -103,18 +103,18 @@
     }
    </style>
 
- <!--<h1 class="text-center">Liste des boutiques</h1>-->
+ <!-- <h1 class="text-center">Liste des services de livraison</h1> -->
  <!--   Début container pour le menu -->
     <div class="block-container">
-       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBoutiqueModal">
-          <i class="fa fa-user-plus"></i> Enregistrer une boutique
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPointModal">
+          <i class="fa fa-user-plus"></i> Enregistrer un point
       </button>
-  
 
 
-       <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#add-point">
-         <i class="fa fa-print"></i> Imprimer un point
-        </button>
+
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#printPointModal">
+          <i class="fa fa-print"></i> Imprimer un point
+       </button>
 
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#search-commande">
           <i class="fa fa-search"></i> Recherche un point
@@ -130,81 +130,45 @@
      <table id="example2" class="table table-bordered table-hover">
 
              <thead>
-                <tr>
-                 <th>Logo</th>
-                 <th>Nom boutique</th>
-                 <th>Email</th>
-                 <th>Telephone</th>
-                 <th>Adresse</th>
-                 <th>Commune</th>
-                    <th>Responsable</th>
-                    <th>Statut</th>
+                <tr> 
+                    <th>Livreur</th>
+                    <th>Recettes</th>
+                    <th>Depenses</th>
+                    <th>Gain</th>
+                    <th>Date</th>
                     <th>Actions</th>
+                    
+                    
                 </tr>
              </thead>
              <tbody>
-              @foreach ($boutiques as $boutique)
+                @foreach ($pointsLivreurs as $pointLivreur)
                 <tr>
-                    <td>
-                        <a href="{{ route('boutiques.profile', $boutique->id) }}" class="update-logo-btn" data-bs-toggle="modal" data-bs-target="#logoModal" data-service-id="{{ $boutique->id }}">
-                        <img src="{{ asset('storage/boutiques/' . $boutique->logo) }}"  
-                                alt="Logo" 
-                                width="50" 
-                                class="img-thumbnail"
-                                style="cursor: pointer;"
-                                title="Cliquez pour changer le logo">
-                        </a>
-                    </td>
-                    <td>{{ $boutique->nom_boutique }}</td>
-                    <td>{{ $boutique->email }}</td>
-                    <td>{{ $boutique->telephone }}</td>
-                    <td>{{ $boutique->adresse }}</td>
-                    <td>{{ $boutique->commune }}</td>
-                    <td>
-                      @forelse($boutique->clients as $customer)
-                          {{ $customer->nom }} {{ $customer->prenoms }} <br>
-                      @empty
-                          <span class="badge badge-danger">Pas de gérant associé</span>
-                      @endforelse
-                    </td>
-                    <td>
-                        @if ($boutique->statut === 'Active')
-                            <img src="{{ asset('img/verified.png') }}" 
-                                alt="Logo" 
-                                width="40">
-                        @else
-                            <img src="{{ asset('img/non_verified.png') }}" 
-                                alt="Logo" 
-                                width="40">
-                        @endif
-                    </td>
-                    <td>
-                        <a href="#" 
-                            class="btn btn-primary edit-boutique"
-                            data-id="{{ $boutique->id }}">
-                            <i class="fas fa-edit"></i>
-                          </a>
-                        <form action="{{ route('boutiques.destroy', $boutique->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger"> <i class="fas fa-trash"></i></button>
-                        </form>
-                    </td>
+                    <td>{{ $pointLivreur->utilisateur->nom }}  {{ $pointLivreur->utilisateur->prenoms }}</td>
+                    <td>{{ $pointLivreur->recettes}}</td>
+                    <td>{{ $pointLivreur->depenses }}</td>
+                    <td>{{ $pointLivreur->gain_jour }}</td>
+                    <td>{{ $pointLivreur->date_jour }}</td>
                     <td>
                     <a href="javascript:void(0)" 
-                        class="btn btn-primary editServiceBtn" 
-                        data-id="{{ $boutique->id }}"
-                        data-nom="{{ $boutique->nom }}"
-                        data-email="{{ $boutique->email }}"
-                        data-telephone="{{ $boutique->telephone }}"
-                        data-adresse="{{ $boutique->adresse }}"
-                        data-toggle="modal" 
-                        data-target="#updateServiceModal">
-                        <i class="fa fa-edit"></i>
-                    </a>
+   class="btn btn-primary editPointLivreurBtn" 
+   data-id="{{ $pointLivreur->id }}"
+   data-utilisateur_id="{{ $pointLivreur->utilisateur_id }}"
+   data-utilisateur_nom="{{ $pointLivreur->utilisateur->nom }}"
+   data-utilisateur_prenoms="{{ $pointLivreur->utilisateur->prenoms }}"
+   data-recettes="{{ $pointLivreur->recettes }}"
+   data-depenses="{{ $pointLivreur->depenses }}"
+   data-date_jour="{{ $pointLivreur->date_jour }}"
+   data-bs-toggle="modal" 
+   data-bs-target="#updatePointLivreurModal">
+   <i class="fa fa-edit"></i>
+</a>
+
+
+
                         
 
-                        <form action="{{ route('boutiques.destroy', $boutique->id) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('points_livreurs.destroy', $pointLivreur->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
@@ -222,8 +186,8 @@
     </section>
    
   </div>
-        @include('boutiques.modals.add')
-        <!--@include('boutiques.modals.update')-->
+  @include('points_livreurs.modals.add')
+  @include('points_livreurs.modals.update')
 
   <!-- Modal de Succès -->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -248,5 +212,26 @@
     </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const editButtons = document.querySelectorAll(".editCommandeBtn");
+    editButtons.forEach(btn => {
+        btn.addEventListener("click", function () {
+            // Récupérer les données de l'attribut data-*
+            document.getElementById("edit_id").value = this.dataset.id;
+            document.getElementById("edit_communes").value = this.dataset.communes;
+            document.getElementById("edit_cout_global").value = this.dataset.cout_global;
+            document.getElementById("edit_cout_livraison").value = this.dataset.cout_livraison;
+            // Ajouter la ligne suivante pour la date de réception
+            document.getElementById("edit_date_reception").value = this.dataset.date_reception;
+            
+            // Modifier l'action du formulaire dynamiquement
+            const form = document.getElementById("updateCommandeForm");
+            form.action = "/commandes/" + this.dataset.id;
+        });
+    });
+});
+</script>
 
 @endsection
+

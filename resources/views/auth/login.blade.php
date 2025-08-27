@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Notre plateforme</title>
+    <title>Bienvenur sur Colissas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="{{ asset('img/favicon.ico') }}">
     <style>
         * {
             margin: 0;
@@ -11,14 +14,23 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-color: #0c387f;
+            --secondary-color: #1e88e5;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #6b46c1 0%, #9333ea 50%, #7c3aed 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            color: var(--dark-color);
+            line-height: 1.6;
         }
 
         .container {
@@ -36,15 +48,15 @@
         }
 
         .left-section {
-            background: linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(147, 51, 234, 0.4) 100%);
-            border-radius: 20px;
-            padding: 40px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            flex: 1;
+            padding: 60px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .welcome-badge {
@@ -83,14 +95,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
-        }
-
-        .person-body {
-            width: 60px;
-            height: 80px;
-            background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-            border-radius: 30px 30px 15px 15px;
-            position: relative;
         }
 
         .person-head {
@@ -166,24 +170,33 @@
             justify-content: center;
         }
 
-        .form-title {
-            color: #374151;
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 30px;
+        .login-form {
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+
+        .form-header {
             text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
+            position: relative;
         }
 
-        .form-label {
+        .form-group label {
             display: block;
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
             font-weight: 500;
+            color: var(--dark-color);
         }
 
         .form-input {
@@ -204,7 +217,7 @@
 
         .login-btn {
             width: 100%;
-            background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+            background: linear-gradient(135deg, #ea771c 0%, #ea771c 100%);
             color: white;
             border: none;
             padding: 14px;
@@ -299,22 +312,11 @@
             <div class="welcome-badge">Bienvenue</div>
             
             <div class="illustration">
-                <div class="circle-bg"></div>
+                <div class="circle-bg1"></div>
                 <div class="person">
-                    <div class="person-head">
-                        <div class="person-hair"></div>
-                    </div>
-                    <div class="person-body"></div>
-                    <div class="person-arm"></div>
+                    <img src="{{ asset('logo/logo1.png') }}" alt="Logo" class="logo">
                 </div>
-                <div class="leaf leaf-1">🌿</div>
-                <div class="leaf leaf-2">🌿</div>
-                <div class="leaf leaf-3">🍃</div>
             </div>
-            
-            <p class="description">
-                Votre plateforme de gestion de votre service de livraison
-            </p>
         </div>
 
         <div class="right-section">

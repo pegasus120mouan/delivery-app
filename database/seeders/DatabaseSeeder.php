@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             DeliveryServiceSeeder::class,
             CoutLivraisonsTableSeeder::class,
             BoutiqueSeeder::class,
+            CommandesTableSeeder::class,
+            PointsLivreursSeeder::class,
             // Ajoutez d'autres seeders ici si nécessaire
         ]);
     }

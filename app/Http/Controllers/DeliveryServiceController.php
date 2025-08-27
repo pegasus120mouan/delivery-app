@@ -168,16 +168,15 @@ public function verifyEmail($token)
         return redirect()->route('delivery_services.index')
                      ->with('success', 'Service de livraison supprimé avec succès.');
     }
+         public function profile($id)
+        {
+                    $deliveryService = DeliveryService::with('utilisateurs')->findOrFail($id);
 
-                public function profile($id)
-            {
-                $deliveryService = DeliveryService::with('utilisateurs')->findOrFail($id);
+                    // On récupère uniquement les utilisateurs qui ont le rôle "gerant"
+                    $gerants = Utilisateur::where('role', 'gerant')->get();
 
-                // On récupère uniquement les utilisateurs qui ont le rôle "gerant"
-                $gerants = Utilisateur::where('role', 'gerant')->get();
-
-                return view('delivery_services.profile', compact('deliveryService', 'gerants'));
-            }
+                    return view('delivery_services.profile', compact('deliveryService', 'gerants'));
+        }         
 
     public function editGerant($id)
 {
