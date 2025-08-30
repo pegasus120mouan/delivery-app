@@ -36,6 +36,14 @@
                 @endforeach
             </select>
           </div>
+          <div class="mb-3">
+            <label for="delivery_service_id">Service de livraison</label>
+            <select name="delivery_service_id" id="delivery_service_id" class="form-control">
+                @foreach($services as $service)
+                    <option value="{{ $service->id }}">{{ $service->nom}}</option>
+                @endforeach
+            </select>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

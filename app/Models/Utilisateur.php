@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Utilisateur extends Authenticatable
 {
@@ -23,6 +25,7 @@ class Utilisateur extends Authenticatable
         'email_verification_token',
         'email_verified',
         'avatar',
+        'delivery_service_id',
     ];
 
     protected $hidden = [
@@ -70,8 +73,10 @@ class Utilisateur extends Authenticatable
     }
 
     public function boutiques()
-{
-    return $this->belongsToMany(Boutique::class, 'boutique_utilisateur', 'utilisateur_id', 'boutique_id');
-}
+    {
+        return $this->belongsToMany(Boutique::class, 'boutique_utilisateur', 'utilisateur_id', 'boutique_id');
+    }
+
+
     
 }

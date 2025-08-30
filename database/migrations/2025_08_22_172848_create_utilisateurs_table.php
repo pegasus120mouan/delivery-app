@@ -27,6 +27,9 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->string('avatar')->default('default.png');
+
+            $table->foreignId('delivery_service_id')->nullable()->constrained('delivery_services')->cascadeOnDelete();
+
         });
     }
 

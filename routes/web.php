@@ -79,6 +79,9 @@ Route::post('/commandes/change-boutique', [CommandeController::class, 'changeBou
 Route::get('/commandes/point-du-jour', [CommandeController::class, 'pointDuJour'])
      ->name('commandes.point_du_jour');
 
+Route::get('/commandes/point-hier', [CommandeController::class, 'pointHier'])
+     ->name('commandes.point_hier');
+
 //Route::resource('commandes', CommandeController::class);
 //Route::resource('commandes', CommandeController::class);
 Route::resource('/commandes', CommandeController::class)->middleware('auth');

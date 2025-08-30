@@ -165,6 +165,7 @@
 
              <thead>
                 <tr style="background-color: #000000; color: #ffffff;">
+                     <th>Service de livraison</th>
                     <th>Communes</th>
                     <th>Cout global</th>
                     <th>Cout livraison</th>
@@ -184,7 +185,8 @@
              <tbody>
                 @foreach ($commandes as $commande)
                 <tr>
-                <td>{{ $commande->communes }}</td>
+                    <td>{{ $commande->deliveryService->nom ?? 'Non défini' }}</td>
+                    <td>{{ $commande->communes }}</td>
                     <td>{{ $commande->cout_global }}</td>
                     <td>{{ $commande->cout_livraison }}</td>
                     <td>{{ $commande->cout_reel }}</td>

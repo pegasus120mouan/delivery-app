@@ -16,10 +16,16 @@ class Commande extends Model
         'boutique_id',
         'livreur_id',
         'utilisateur_id',
+        'delivery_service_id',
     ];
 
     // Désactiver created_at et updated_at
     public $timestamps = false;
+
+    public function deliveryService()
+    {
+        return $this->belongsTo(DeliveryService::class, 'delivery_service_id');
+    }
 
     public function boutique()
     {

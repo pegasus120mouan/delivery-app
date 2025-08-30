@@ -6,6 +6,7 @@ use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Models\DeliveryService;
 
 class UtilisateurController extends Controller
 {
@@ -15,7 +16,8 @@ class UtilisateurController extends Controller
     public function index()
     {
         $utilisateurs = Utilisateur::all();
-        return view('utilisateurs.index', compact('utilisateurs'));
+        $services = DeliveryService::all();
+        return view('utilisateurs.index', compact('utilisateurs', 'services'));
     }
 
     /**
@@ -35,11 +37,12 @@ class UtilisateurController extends Controller
             'nom' => 'required|string|max:255',
             'prenoms' => 'required|string|max:255',
             'login' => 'required|string|max:255|unique:utilisateurs',
-            'role' => 'required|string|in:admin,client,livreur',
+            'role' => 'required|string|in:admin,client,livreur,gerant',
             'contact' => 'required|string|max:20|unique:utilisateurs',
             'lieu_habitation' => 'required|string|max:255',
             'whatsapp' => 'nullable|string|max:20',
             'password' => 'required|string|min:8|confirmed',
+            'delivery_service_id' => 'nullable|exists:delivery_services,id',
         ]);
         $validated['password'] = Hash::make($request->password);
         

@@ -132,6 +132,7 @@
              <thead>
                 <tr>
                     <th>Avatar</th>
+                    <th>Service de livraison</th>
                     <th>Nom</th>
                     <th>Prenoms</th>
                     <th>Login</th>
@@ -154,6 +155,7 @@
                                 title="Voir le profil">
                         </a>
                     </td>
+                    <td>{{ $utilisateur->deliveryService?->nom ?? 'Non attribué' }}</td>
                     <td>{{ $utilisateur->nom }}</td>
                     <td>{{ $utilisateur->prenoms }}</td>
                     <td>{{ $utilisateur->login }}</td>

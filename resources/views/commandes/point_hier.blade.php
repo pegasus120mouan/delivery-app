@@ -1,5 +1,5 @@
 @extends("layout.main")
-@section("title", "Point du jour")
+@section("title", "Point d'hier")
 @section("content")
 
 <div class="content-wrapper">
@@ -8,7 +8,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Point Général du {{ \Carbon\Carbon::now()->format('d/m/Y') }}</h1>
+            <h1 class="m-0">Point Général du {{ \Carbon\Carbon::yesterday()->format('d/m/Y') }}</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -105,7 +105,6 @@
                     <thead>
                         
                       <tr>
-                        <th>Service de livraison</th>
                         <th>Boutiques</th>
                         <th>Montant Global</th>
                         <th>Gain  livraison</th>
@@ -120,7 +119,6 @@
                     <tbody>
                         @foreach($parBoutique as $boutique)
                             <tr>
-                                <td>{{ $boutique->service_livraison ?? 'Non attribué' }}</td>
                                 <td>{{ $boutique->nom_boutique }}</td>
                                 <td>{{ number_format($boutique->total_amount, 0, ',', ' ') }} FCFA</td>
                                 <td>{{ number_format($boutique->total_cout_livraison, 0, ',', ' ') }} FCFA</td>

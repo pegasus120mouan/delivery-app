@@ -247,7 +247,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="vuegeneral.php" class="nav-link">
+                  <a href="{{route('commandes.point_hier')}}" class="nav-link">
                     <i class="fas fa-bicycle"></i>
                     <p>Point hier</p>
                   </a>
