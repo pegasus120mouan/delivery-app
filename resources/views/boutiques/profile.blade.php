@@ -33,7 +33,7 @@
                        src="{{ asset('storage/boutiques/' . $boutique->logo) }}"
                        alt="User profile picture">
                 </div>
-                <form action="" method="POST" enctype="multipart/form-data">                
+                <form action="{{ route('boutiques.update-logo', $boutique) }}" method="POST" enctype="multipart/form-data">                
                   @csrf
                   @method('PUT')
                   <input type="file" name="logo" id="logo">
@@ -87,6 +87,7 @@
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#editServiceInfo" data-toggle="tab">Modifier mes informations</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#showDeliveryServices" data-toggle="tab">Mes services de livraison</a></li>
                   <li class="nav-item"><a class="nav-link" href="#attribuerGerant" data-toggle="tab">Attribuer un gérant</a></li>
                 </ul>
               </div><!-- /.card-header -->
@@ -130,7 +131,85 @@
                   </div>
                   </div>
                   <!-- /.tab-pane -->
-                  <div class="tab-pane" id="attribuerGerant">
+
+                  <div class="tab-pane" id="showDeliveryServices">
+
+                  <div class="mb-3">
+                  <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                      Ajouter un service de livraison
+                  </button>
+                  </div>
+    @if($boutique->deliveryServices->count() > 0)
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Service de livraison</th>
+                    <th>Contact Service</th>
+                    <th>Gérant du service</th>
+                    <th>Contact Gérant du service</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($boutique->deliveryServices as $service)
+                    <tr>
+                        <td>{{ $service->nom }}</td>
+                        <td>
+                            @if($service->contact)
+                                <i class="fas fa-phone mr-2"></i> {{ $service->contact }}
+                                @if($service->whatsapp)
+                                    <a href="https://wa.me/{{ $service->whatsapp }}" target="_blank" class="text-success ml-2" title="Contacter sur WhatsApp">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                @endif
+                                <br>
+                            @endif
+                            @if($service->email)
+                                <i class="fas fa-envelope mr-2"></i> {{ $service->email }}
+                            @endif
+                        </td>
+                        <td>
+                            @if($service->utilisateurs->isNotEmpty())
+                                @foreach($service->utilisateurs as $user)
+                                    {{ $user->prenoms }} {{ $user->nom }}
+                                    @if(!$loop->last)<br>@endif
+                                @endforeach
+                            @else
+                                <span class="text-muted">Aucun utilisateur</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($service->utilisateurs->isNotEmpty())
+                                @foreach($service->utilisateurs as $user)
+                                    @if($user->contact)
+                                        <i class="fas fa-phone mr-2"></i> {{ $user->contact }}
+                                        @if($user->whatsapp)
+                                            <a href="https://wa.me/{{ $user->whatsapp }}" target="_blank" class="text-success ml-2" title="Contacter sur WhatsApp">
+                                                <i class="fab fa-whatsapp"></i>
+                                            </a>
+                                        @endif
+                                        <br>
+                                    @endif
+                                    @if($user->email)
+                                        <i class="fas fa-envelope mr-2"></i> {{ $user->email }}
+                                    @endif
+                                    @if(!$loop->last)<hr>@endif
+                                @endforeach
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <div class="alert alert-info">
+            Aucun service de livraison n'est associé à cette boutique pour le moment.
+        </div>
+    @endif
+</div>
+                
+                <div class="tab-pane" id="attribuerGerant">
                     <!-- The timeline -->
 
                     <form action="{{ route('boutiques.updateClient', $boutique->id) }}" method="POST">
@@ -156,6 +235,7 @@
                 Annuler
             </a>
         </form>
+        @include('boutiques.modals.add-service')  
                   </div>
                 </div>
                 <!-- /.tab-content -->

@@ -42,6 +42,10 @@ Route::put('delivery_services/{id}/associer-gerant', [DeliveryServiceController:
 
 Route::resource("delivery_services", DeliveryServiceController::class);
 
+// Route pour afficher les commandes par service de livraison
+Route::get('/commandes/par-service', [CommandeController::class, 'parService'])
+    ->name('commandes.par_service');
+
 
 
 
@@ -55,8 +59,10 @@ Route::resource("utilisateurs", UtilisateurController::class);
 
 
 /* Route Boutique */
+Route::put('/boutiques/{boutique}/update-logo', [BoutiqueController::class, 'updateLogo'])->name('boutiques.update-logo');
 Route::get('/boutiques/{boutique}/profile', [BoutiqueController::class, 'profile'])->name('boutiques.profile');
-Route::put('boutiques/{boutique}/associer-client', [BoutiqueController::class, 'updateClient'])->name('boutiques.updateClient');
+
+Route::put('/boutiques/{boutique}/associer-client', [BoutiqueController::class, 'updateClient'])->name('boutiques.updateClient');
 
 Route::resource('boutiques', BoutiqueController::class);
 /* Fin route Boutique */

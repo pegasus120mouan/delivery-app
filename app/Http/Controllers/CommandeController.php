@@ -177,6 +177,7 @@ class CommandeController extends Controller
             ->leftJoin('delivery_services as ds', 'c.delivery_service_id', '=', 'ds.id')
             ->select(
                 'c.boutique_id',
+                'c.delivery_service_id',
                 'b.nom_boutique',
                 'ds.nom as service_livraison',
                 DB::raw("SUM(CASE WHEN c.statut = 'Livré' AND DATE(c.date_livraison) = '$date' THEN c.cout_global ELSE 0 END) AS total_amount"),
@@ -186,7 +187,7 @@ class CommandeController extends Controller
                 DB::raw("SUM(CASE WHEN c.statut = 'Livré' AND DATE(c.date_livraison) = '$date' THEN 1 ELSE 0 END) AS total_delivered_orders"),
                 DB::raw("SUM(CASE WHEN DATE(c.date_reception) = '$date' AND c.date_livraison IS NULL THEN 1 ELSE 0 END) AS total_undelivered_orders")
             )
-            ->groupBy('c.boutique_id', 'b.nom_boutique', 'ds.nom')
+            ->groupBy('c.boutique_id', 'c.delivery_service_id', 'b.nom_boutique', 'ds.nom')
             ->havingRaw("SUM(CASE WHEN c.statut = 'Livré' AND DATE(c.date_livraison) = '$date' THEN 1 ELSE 0 END) > 0")
             ->get();
 
@@ -220,5 +221,27 @@ class CommandeController extends Controller
             'parLivreur',
             'date'
         ));
+    }
+
+    public function parService(Request $request)
+    {
+        $serviceId = $request->query('serviceId');
+        
+        // Récupérer le service de livraison
+        $service = \App\Models\DeliveryService::findOrFail($serviceId);
+        
+        // Construire la requête avec les relations et le tri
+        $commandes = Commande::with(['boutique', 'livreur'])
+            ->where('delivery_service_id', $serviceId)
+            ->orderBy('date_reception', 'DESC')
+            ->paginate(25); // 25 éléments par page
+            
+        // Ajouter les paramètres de tri à la pagination
+        $commandes->appends(['serviceId' => $serviceId]);
+    
+        return view('commandes.par_service', [
+            'commandes' => $commandes,
+            'service' => $service
+        ]);
     }
 }

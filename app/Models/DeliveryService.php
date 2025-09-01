@@ -28,45 +28,61 @@ class DeliveryService extends Model
     /**
      * Relation : les gérants liés au service via la table pivot
      */
-    public function gerants(): BelongsToMany
+    public function gerants()
     {
         return $this->belongsToMany(
             Utilisateur::class,
-            'delivery_service_utilisateur', // table pivot
-            'delivery_service_id',          // clé étrangère de DeliveryService
-            'utilisateur_id'                // clé étrangère de Utilisateur
-        )->where('role', 'gerant');
+            'delivery_service_utilisateur',
+            'delivery_service_id',
+            'utilisateur_id'
+        );
+    }
+
+    /**
+     * Relation : tous les utilisateurs liés au service via la table pivot
+     */
+    public function utilisateurs(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Utilisateur::class,
+            'delivery_service_utilisateur',
+            'delivery_service_id',
+            'utilisateur_id'
+        );
     }
 
     /**
      * Relation : les livreurs liés au service via la table pivot
      */
-    public function livreurs(): BelongsToMany
+    public function livreurs()
     {
         return $this->belongsToMany(
             Utilisateur::class,
             'delivery_service_utilisateur',
             'delivery_service_id',
             'utilisateur_id'
-        )->where('role', 'livreur');
+        );
     }
 
     /**
      * Relation : les clients liés au service via la table pivot
      */
-    public function clients(): BelongsToMany
+    public function clients()
     {
         return $this->belongsToMany(
             Utilisateur::class,
             'delivery_service_utilisateur',
             'delivery_service_id',
             'utilisateur_id'
-        )->where('role', 'client');
+        );
     }
 
-    public function utilisateurs()
+    /**
+     * Relation : les boutiques liées au service via la table pivot
+     */
+    public function boutiques()
     {
-        return $this->belongsToMany(Utilisateur::class, 'delivery_service_utilisateur');
+        return $this->belongsToMany(Boutique::class, 'boutique_delivery_service')
+                   ->withTimestamps();
     }
-    
 }

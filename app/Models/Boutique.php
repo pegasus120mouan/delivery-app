@@ -17,13 +17,23 @@ class Boutique extends Model
         'responsable_id',
     ];
 
-     public function responsable()
-        {
-            return $this->belongsTo(Utilisateur::class, 'responsable_id')
-                        ->where('role', 'client'); // optionnel : on filtre sur les clients
-        }
+    public function responsable()
+    {
+        return $this->belongsTo(Utilisateur::class, 'responsable_id')
+                   ->where('role', 'client');
+    }
+
     public function clients()
-        {
-            return $this->belongsToMany(Utilisateur::class, 'boutique_utilisateur', 'boutique_id', 'utilisateur_id');
-        }
+    {
+        return $this->belongsToMany(Utilisateur::class, 'boutique_utilisateur', 'boutique_id', 'utilisateur_id');
+    }
+
+    /**
+     * Les services de livraison associés à cette boutique
+     */
+    public function deliveryServices()
+    {
+        return $this->belongsToMany(DeliveryService::class, 'boutique_delivery_service')
+                   ->withTimestamps();
+    }
 }

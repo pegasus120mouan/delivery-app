@@ -119,8 +119,12 @@
                     
                     <tbody>
                         @foreach($parBoutique as $boutique)
-                            <tr>
-                                <td>{{ $boutique->service_livraison ?? 'Non attribué' }}</td>
+                            <tr> 
+                            <td>
+                            <a href="{{ route('commandes.par_service', ['serviceId' => $boutique->delivery_service_id]) }}" class="text-primary">
+    {{ $boutique->service_livraison ?? 'Non attribué' }}
+</a>
+                            </td>
                                 <td>{{ $boutique->nom_boutique }}</td>
                                 <td>{{ number_format($boutique->total_amount, 0, ',', ' ') }} FCFA</td>
                                 <td>{{ number_format($boutique->total_cout_livraison, 0, ',', ' ') }} FCFA</td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Boutique;
 use Illuminate\Http\Request;
 use App\Models\Utilisateur;
+use Illuminate\Support\Facades\Storage;
 
 class BoutiqueController extends Controller
 {
@@ -97,25 +98,53 @@ class BoutiqueController extends Controller
 
     public function profile($id)
     {
-                $boutique = Boutique::with('clients')->findOrFail($id);
+        $boutique = Boutique::with([
+            'clients',
+            'deliveryServices.utilisateurs' => function($query) {
+                $query->select('utilisateurs.id', 'nom', 'prenoms', 'contact', 'email');
+            }
+        ])->findOrFail($id);
 
-                // On récupère uniquement les utilisateurs qui ont le rôle "gerant"
-                $clients = Utilisateur::where('role', 'client')->get();
+        $clients = Utilisateur::where('role', 'client')->get();
+        $deliveryServices = \App\Models\DeliveryService::with('utilisateurs')->get();
 
-                return view('boutiques.profile', compact('boutique', 'clients'));
+        return view('boutiques.profile', compact('boutique', 'clients', 'deliveryServices'));
     } 
 
-    public function updateClient(Request $request, $id)
-{
-    $boutique = Boutique::findOrFail($id);
+            public function updateClient(Request $request, $id)
+        {
+            $boutique = Boutique::findOrFail($id);
 
-    // Associer l’utilisateur choisi au service
-    $boutique->clients()->syncWithoutDetaching([$request->client_id]);
+            // Associer l’utilisateur choisi au service
+            $boutique->clients()->syncWithoutDetaching([$request->client_id]);
 
-  //  return redirect()->route('delivery_services.index')
-                   //  ->with('success', 'Gérant associé avec succès au service.');
+        //  return redirect()->route('delivery_services.index')
+                        //  ->with('success', 'Gérant associé avec succès au service.');
 
-                     return redirect()->route('boutiques.profile', $boutique)
-            ->with('success', 'Client associé avec succès à la boutique.');
-}
+                            return redirect()->route('boutiques.profile', $boutique)
+                    ->with('success', 'Client associé avec succès à la boutique.');
+        }
+
+        public function updateLogo(Request $request, Boutique $boutique)
+        {
+            $request->validate([
+                'logo' => 'required|image|max:2048', // Vérifie que c'est une image, max 2 Mo
+            ]);
+        
+            // Supprimer l'ancien logo s'il existe
+            if ($boutique->logo) {
+                Storage::disk('public')->delete('boutiques/' . $boutique->logo);
+            }
+        
+            // Stocker la nouvelle image
+            $logoName = time() . '.' . $request->logo->extension();
+            $request->logo->storeAs('boutiques', $logoName, 'public');
+        
+            // Mettre à jour le champ logo dans la base de données
+            $boutique->update(['logo' => $logoName]);
+        
+            return redirect()->route('boutiques.profile', $boutique)
+                    ->with('popup', true)
+                    ->with('success', 'Logo mis à jour avec succès.');
+        }
 }

@@ -132,28 +132,36 @@
              <thead>
                 <tr>
                  <th>Logo</th>
+                 <th>Services de livraison</th>
                  <th>Nom boutique</th>
                  <th>Email</th>
                  <th>Telephone</th>
                  <th>Adresse</th>
                  <th>Commune</th>
-                    <th>Responsable</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
+                 <th>Responsable</th>
+                 <th>Statut</th>
+                 <th>Actions</th>
                 </tr>
              </thead>
              <tbody>
               @foreach ($boutiques as $boutique)
                 <tr>
                     <td>
-                        <a href="{{ route('boutiques.profile', $boutique->id) }}" class="update-logo-btn" data-bs-toggle="modal" data-bs-target="#logoModal" data-service-id="{{ $boutique->id }}">
-                        <img src="{{ asset('storage/boutiques/' . $boutique->logo) }}"  
-                                alt="Logo" 
-                                width="50" 
-                                class="img-thumbnail"
-                                style="cursor: pointer;"
-                                title="Cliquez pour changer le logo">
-                        </a>
+                    <a href="{{ route('boutiques.profile', $boutique->id) }}" class="update-logo-btn">
+    <img src="{{ asset('storage/boutiques/' . $boutique->logo) }}"  
+         alt="Logo" 
+         width="50" 
+         class="img-thumbnail"
+         style="cursor: pointer;"
+         title="Voir le profil">
+</a>
+                    </td>
+                    <td>
+                        @forelse($boutique->deliveryServices as $service)
+                            {{ $service->nom }} <br>
+                        @empty
+                            <span class="badge badge-danger">Pas de service de livraison associé</span>
+                        @endforelse
                     </td>
                     <td>{{ $boutique->nom_boutique }}</td>
                     <td>{{ $boutique->email }}</td>
