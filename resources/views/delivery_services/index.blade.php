@@ -113,25 +113,26 @@
 
 
        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#add-point">
-         <i class="fa fa-print"></i> Imprimer un point
+         <i class="fa fa-print"></i> Imprimer la liste des services de livraison
         </button>
 
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#search-commande">
-          <i class="fa fa-search"></i> Recherche un point
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#search-service">
+          <i class="fa fa-search"></i> Recherche un service de livraison
          </button>
 
-        <button type="button" class="btn btn-dark" onclick="window.location.href='export_commandes.php'">
-          <i class="fa fa-print"></i> Exporter la liste des commandes
+        <button type="button" class="btn btn-dark" onclick="window.location.href='export_delivery_services.php'">
+          <i class="fa fa-print"></i> Exporter la liste des services de livraison
         </button>
      </div>
 
      <!--   Fin block container pour le menu -->
 
-     <table id="example2" class="table table-bordered table-hover">
+     <table id="example2" class="table table-bordered table-hover" style="width:100%">
 
              <thead>
-                <tr>
-                <th>Logo</th>
+             <tr style="background-color: #000000; color: #ffffff;">
+                    <th>Logo</th>
+                    <th>Code</th>
                     <th>Nom service</th>
                     <th>Email</th>
                     <th>Telephone</th>
@@ -153,6 +154,7 @@
                                 title="Voir le profil">
                         </a>
                     </td>
+                    <td>{{ $delivery_service->code }}</td>
                     <td>{{ $delivery_service->nom }}</td>
                     <td>{{ $delivery_service->email }}</td>
                     <td>{{ $delivery_service->telephone }}</td>
@@ -199,9 +201,8 @@
                 @endforeach
              </tbody>
      
-          </table>
-          
-        </div>
+    </table>
+          </div>
         
       </div>
     </section>
@@ -209,6 +210,7 @@
   </div>
   @include('delivery_services.modals.add')
   @include('delivery_services.modals.update')
+  @include('delivery_services.modals.search')
 
   <!-- Modal de Succès -->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -235,3 +237,21 @@
 
 
 @endsection
+
+@push('scripts')
+<script>
+  $(function () {
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+      "scrollY": "300px",
+      "scrollCollapse": true,
+    });
+  });
+</script>
+@endpush

@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Liste des utilisateurs')
+@section('title', 'Boutiques inactives')
 
 @section('content')
 
@@ -10,12 +10,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Gestion des utilisateurs</h1>
+            <h1 class="m-0">Liste des boutiques inactives</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">{{ Auth::user()->role }}</a></li>
-              <li class="breadcrumb-item active">Utilisateurs</li>
+              <li class="breadcrumb-item active">Boutiques</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -32,9 +32,9 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ $utilisateurs->count() }}</h3>
+                <h3>{{ $boutiques->count() }}</h3>
 
-                <p>Utilisateurs Total</p>
+                <p>Boutiques Total</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -47,7 +47,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-              <h3>{{ $utilisateurs->where('role', 'admin')->count() }}</h3>
+              <h3>0</h3>
 
                 <p>Administrateurs</p>
               </div>
@@ -62,7 +62,7 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-              <h3>{{ $utilisateurs->where('role', 'livreur')->count() }}</h3>
+              <h3>{{ $boutiques->count() }}</h3>
 
                 <p>Livreurs</p>
               </div>
@@ -77,7 +77,7 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-              <h3>{{ $utilisateurs->where('role', 'client')->count() }}</h3>
+              <h3>0</h3>
 
                 <p>Clients</p>
               </div>
@@ -103,13 +103,13 @@
     }
    </style>
 
-<h1 class="text-center">Liste des utilisateurs</h1>
+ <!--<h1 class="text-center">Liste des boutiques</h1>-->
  <!--   Début container pour le menu -->
     <div class="block-container">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
-          <i class="fa fa-user-plus"></i> Enregistrer un utilisateur
+       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBoutiqueModal">
+          <i class="fa fa-user-plus"></i> Enregistrer une boutique
       </button>
-
+  
 
 
        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#add-point">
@@ -131,47 +131,54 @@
 
              <thead>
                 <tr>
-                    <th>Avatar</th>
-                    <th>Code</th>
-                    <th>Service de livraison</th>
-                    <th>Nom</th>
-                    <th>Prenoms</th>
-                    <th>Login</th>
-                    <th>Role</th>
-                    <th>Contact</th>
-                    <th>Lieu d'Habitation</th>
-                    <th>Whatsapp</th>
-                    <th>Actions</th>
+                 <th>Logo</th>
+                 <th>Code</th>
+                 <th>Nom boutique</th>
+                 <th>Email</th>
+                 <th>Telephone</th>
+                 <th>Adresse</th>
+                 <th>Commune</th>
+                 <th>Statut</th>
+                 <th>Actions</th>
                 </tr>
              </thead>
              <tbody>
-                @foreach ($utilisateurs as $utilisateur)
+              @foreach ($boutiques as $boutique)
                 <tr>
                     <td>
-                        <a href="{{ route('utilisateurs.profile', $utilisateur->id) }}">
-                            <img src="{{ asset('storage/utilisateurs/' . $utilisateur->avatar) }}" 
-                                alt="Avatar" 
-                                class="img-circle" 
-                                style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
-                                title="Voir le profil">
-                        </a>
+                      <a href="{{ route('boutiques.profile', $boutique->id) }}" class="update-logo-btn">
+                      <img src="{{ asset('storage/boutiques/' . $boutique->logo) }}"  
+                          alt="Logo" 
+                          width="50" 
+                          class="img-thumbnail"
+                          style="cursor: pointer;"
+                          title="Voir le profil">
+                      </a>
                     </td>
-                    <td>{{ $utilisateur->code }}</td>
-                    <td>{{ $utilisateur->deliveryService?->nom ?? 'Non attribué' }}</td>
-                    <td>{{ $utilisateur->nom }}</td>
-                    <td>{{ $utilisateur->prenoms }}</td>
-                    <td>{{ $utilisateur->login }}</td>
-                    <td>{{ $utilisateur->role }}</td>
-                    <td>{{ $utilisateur->contact }}</td>
-                    <td>{{ $utilisateur->lieu_habitation }}</td>
-                    <td>{{ $utilisateur->whatsapp }}</td>
+                    <td><span class="badge badge-info">{{ $boutique->code }}</span></td>
+                    <td>{{ $boutique->nom_boutique }}</td>
+                    <td>{{ $boutique->email }}</td>
+                    <td>{{ $boutique->telephone }}</td>
+                    <td>{{ $boutique->adresse }}</td>
+                    <td>{{ $boutique->commune }}</td>
                     <td>
-                        <a href="{{ route('utilisateurs.edit', $utilisateur->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                        <form action="{{ route('utilisateurs.destroy', $utilisateur->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                        </form>
+                        @if ($boutique->email_verified_at !== null)
+                            <img src="{{ asset('img/verified.png') }}" 
+                                alt="Logo" 
+                                width="40">
+                        @else
+                            <img src="{{ asset('img/non_verified.png') }}" 
+                                alt="Logo" 
+                                width="40">
+                        @endif
+                    </td>
+                    <td>
+                      <form action="{{ route('boutiques.resendVerification', $boutique->id) }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir renvoyer l\'e-mail de vérification ?')">
+                          Renvoyer le mail de vérification
+                        </button>
+                      </form>
                     </td>
                 </tr>
                 @endforeach
@@ -185,7 +192,8 @@
     </section>
    
   </div>
-  @include('utilisateurs.modals.add')
+        @include('boutiques.modals.add')
+        <!--@include('boutiques.modals.update')-->
 
   <!-- Modal de Succès -->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">

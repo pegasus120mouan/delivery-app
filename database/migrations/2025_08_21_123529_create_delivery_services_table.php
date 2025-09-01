@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('delivery_services', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique(); // Exemple : SE5411BF
             $table->string('nom');
             $table->string('email')->unique();
             $table->string('telephone')->nullable();
@@ -22,11 +23,7 @@ return new class extends Migration
             $table->string('email_verification_token')->nullable();
             $table->timestamps();
 
-            // CLÉ ÉTRANGÈRE POUR LES LIVREURS
-            $table->foreignId('delivery_service_id')
-            ->nullable()
-            ->constrained('delivery_services')
-            ->onDelete('set null'); 
+ 
         });
         
     }

@@ -23,6 +23,7 @@ class UtilisateursTableSeeder extends Seeder
         // Créer des utilisateurs de test
         $utilisateurs = [
             [
+                'code' => Str::random(6),
                 'nom' => 'Admin',
                 'prenoms' => 'Système',
                 'contact' => '+2250102030405',
@@ -39,6 +40,7 @@ class UtilisateursTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'code' => Str::random(6),
                 'nom' => 'Dupont',
                 'prenoms' => 'Jean',
                 'contact' => '+2250506070809',
@@ -55,6 +57,7 @@ class UtilisateursTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'code' => Str::random(6),
                 'nom' => 'Koné',
                 'prenoms' => 'Amadou',
                 'contact' => '+2250708091011',
@@ -71,6 +74,7 @@ class UtilisateursTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'code' => Str::random(6),
                 'nom' => 'Traoré',
                 'prenoms' => 'Aïcha',
                 'contact' => '+2250304050607',

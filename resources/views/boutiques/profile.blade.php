@@ -139,74 +139,69 @@
                       Ajouter un service de livraison
                   </button>
                   </div>
-    @if($boutique->deliveryServices->count() > 0)
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Service de livraison</th>
-                    <th>Contact Service</th>
-                    <th>Gérant du service</th>
-                    <th>Contact Gérant du service</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($boutique->deliveryServices as $service)
-                    <tr>
-                        <td>{{ $service->nom }}</td>
-                        <td>
-                            @if($service->contact)
-                                <i class="fas fa-phone mr-2"></i> {{ $service->contact }}
-                                @if($service->whatsapp)
-                                    <a href="https://wa.me/{{ $service->whatsapp }}" target="_blank" class="text-success ml-2" title="Contacter sur WhatsApp">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </a>
-                                @endif
-                                <br>
-                            @endif
-                            @if($service->email)
-                                <i class="fas fa-envelope mr-2"></i> {{ $service->email }}
-                            @endif
-                        </td>
-                        <td>
-                            @if($service->utilisateurs->isNotEmpty())
-                                @foreach($service->utilisateurs as $user)
-                                    {{ $user->prenoms }} {{ $user->nom }}
-                                    @if(!$loop->last)<br>@endif
-                                @endforeach
-                            @else
-                                <span class="text-muted">Aucun utilisateur</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if($service->utilisateurs->isNotEmpty())
-                                @foreach($service->utilisateurs as $user)
-                                    @if($user->contact)
-                                        <i class="fas fa-phone mr-2"></i> {{ $user->contact }}
-                                        @if($user->whatsapp)
-                                            <a href="https://wa.me/{{ $user->whatsapp }}" target="_blank" class="text-success ml-2" title="Contacter sur WhatsApp">
-                                                <i class="fab fa-whatsapp"></i>
-                                            </a>
+                   @if($boutique->deliveryServices->count() > 0)
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Service de livraison</th>
+                                <th>Contact Service</th>
+                                <th>Gérant du service</th>
+                                <th>Contact Gérant du service</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($boutique->deliveryServices as $service)
+                                <tr>
+                                    <td>{{ $service->nom }}</td>
+                                    <td>
+                                        @if($service->telephone)
+                                            <i class="fas fa-phone mr-2"></i> {{ $service->telephone }}
+                                            @if($service->whatsapp)
+                                                <a href="https://wa.me/{{ $service->whatsapp }}" target="_blank" class="text-success ml-2" title="Contacter sur WhatsApp">
+                                                    <i class="fab fa-whatsapp"></i>
+                                                </a>
+                                            @endif
+                                            <br>
                                         @endif
-                                        <br>
-                                    @endif
-                                    @if($user->email)
-                                        <i class="fas fa-envelope mr-2"></i> {{ $user->email }}
-                                    @endif
-                                    @if(!$loop->last)<hr>@endif
-                                @endforeach
-                            @else
-                                <span class="text-muted">-</span>
-                            @endif
+                                        @if($service->email)
+                                            <i class="fas fa-envelope mr-2"></i> {{ $service->email }}
+                                        @endif
+                                    </td>
+                                    <td>
+                            @forelse($service->utilisateurs as $user)
+                                {{ $user->prenoms }} {{ $user->nom }}<br>
+                            @empty
+                                <span class="text-muted">Aucun utilisateur</span>
+                            @endforelse
                         </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="alert alert-info">
-            Aucun service de livraison n'est associé à cette boutique pour le moment.
-        </div>
-    @endif
+                        <td>
+                            @forelse($service->utilisateurs as $user)
+                                @if($user->contact)
+                                    <i class="fas fa-phone mr-2"></i> {{ $user->contact }}
+                                    @if($user->whatsapp)
+                                        <a href="https://wa.me/{{ $user->whatsapp }}" target="_blank" class="text-success ml-2" title="Contacter sur WhatsApp">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </a>
+                                    @endif
+                                    <br>
+                                @endif
+                                @if($user->email)
+                                    <i class="fas fa-envelope mr-2"></i> {{ $user->email }}
+                                @endif
+                                @if(!$loop->last)<hr>@endif
+                            @empty
+                                <span class="text-muted">-</span>
+                            @endforelse
+                        </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                        @else
+                          <div class="alert alert-info">
+                              Aucun service de livraison n'est associé à cette boutique pour le moment.
+                          </div>
+                        @endif
 </div>
                 
                 <div class="tab-pane" id="attribuerGerant">
@@ -235,7 +230,6 @@
                 Annuler
             </a>
         </form>
-        @include('boutiques.modals.add-service')  
                   </div>
                 </div>
                 <!-- /.tab-content -->
@@ -250,5 +244,7 @@
     </section>
     <!-- /.content -->
   </div>
+
+@include('boutiques.modals.add-service')
 
 @endsection

@@ -132,13 +132,14 @@
              <thead>
                 <tr>
                  <th>Logo</th>
-                 <th>Services de livraison</th>
+                 <th>Code</th>
                  <th>Nom boutique</th>
                  <th>Email</th>
                  <th>Telephone</th>
                  <th>Adresse</th>
                  <th>Commune</th>
                  <th>Responsable</th>
+                 <th>Services de livraison</th>
                  <th>Statut</th>
                  <th>Actions</th>
                 </tr>
@@ -156,13 +157,7 @@
          title="Voir le profil">
 </a>
                     </td>
-                    <td>
-                        @forelse($boutique->deliveryServices as $service)
-                            {{ $service->nom }} <br>
-                        @empty
-                            <span class="badge badge-danger">Pas de service de livraison associé</span>
-                        @endforelse
-                    </td>
+                    <td><span class="badge badge-info">{{ $boutique->code }}</span></td>
                     <td>{{ $boutique->nom_boutique }}</td>
                     <td>{{ $boutique->email }}</td>
                     <td>{{ $boutique->telephone }}</td>
@@ -176,7 +171,14 @@
                       @endforelse
                     </td>
                     <td>
-                        @if ($boutique->statut === 'Active')
+                        @forelse($boutique->deliveryServices as $service)
+                            {{ $service->nom }} <br>
+                        @empty
+                            <span class="badge badge-danger">Pas de service de livraison associé</span>
+                        @endforelse
+                    </td>
+                    <td>
+                        @if ($boutique->email_verified_at !== null)
                             <img src="{{ asset('img/verified.png') }}" 
                                 alt="Logo" 
                                 width="40">
@@ -187,29 +189,17 @@
                         @endif
                     </td>
                     <td>
-                        <a href="#" 
-                            class="btn btn-primary edit-boutique"
-                            data-id="{{ $boutique->id }}">
-                            <i class="fas fa-edit"></i>
-                          </a>
-                        <form action="{{ route('boutiques.destroy', $boutique->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger"> <i class="fas fa-trash"></i></button>
-                        </form>
-                    </td>
-                    <td>
-                    <a href="javascript:void(0)" 
-                        class="btn btn-primary editServiceBtn" 
-                        data-id="{{ $boutique->id }}"
-                        data-nom="{{ $boutique->nom }}"
-                        data-email="{{ $boutique->email }}"
-                        data-telephone="{{ $boutique->telephone }}"
-                        data-adresse="{{ $boutique->adresse }}"
-                        data-toggle="modal" 
-                        data-target="#updateServiceModal">
-                        <i class="fa fa-edit"></i>
-                    </a>
+                      <a href="javascript:void(0)" 
+                          class="btn btn-primary editServiceBtn" 
+                          data-id="{{ $boutique->id }}"
+                          data-nom="{{ $boutique->nom }}"
+                          data-email="{{ $boutique->email }}"
+                          data-telephone="{{ $boutique->telephone }}"
+                          data-adresse="{{ $boutique->adresse }}"
+                          data-toggle="modal" 
+                          data-target="#updateServiceModal">
+                          <i class="fa fa-edit"></i>
+                      </a>
                         
 
                         <form action="{{ route('boutiques.destroy', $boutique->id) }}" method="POST" style="display: inline;">

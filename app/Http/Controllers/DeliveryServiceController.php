@@ -59,7 +59,14 @@ class DeliveryServiceController extends Controller
         \Log::info('Service créé: ' . $deliveryService->id);
         
         // Envoyer l'email de vérification
-        $deliveryService->notify(new \App\Notifications\VerifyDeliveryServiceEmail($deliveryService));
+        try {
+            $deliveryService->notify(new \App\Notifications\VerifyDeliveryServiceEmail($deliveryService));
+        } catch (\Exception $e) {
+            \Log::error("Erreur lors de l'envoi de l'email de vérification pour le service " . $deliveryService->id . ": " . $e->getMessage());
+            // Optionnel: informer l'utilisateur qu'il y a eu un problème
+            return redirect()->route('delivery_services.index')
+                ->with('error', "Service de livraison créé, mais l'envoi de l'email de vérification a échoué.");
+        }
         
         return redirect()->route('delivery_services.index')
             ->with('success', 'Service de livraison créé avec succès. Un email de vérification a été envoyé.');
@@ -101,7 +108,7 @@ public function verifyEmail($token)
         \Log::error('Erreur lors de la vérification d\'email: ' . $e->getMessage());
         
         return redirect()->route('delivery_services.index')
-            ->with('error', 'Une erreur s\'est produite lors de la vérification.');
+            ->with('error', "Une erreur s'est produite lors de la vérification.");
     }
 }
 
@@ -202,6 +209,50 @@ public function updateGerant(Request $request, $id)
                      return redirect()->route('delivery_services.profile', $delivery_service)
             ->with('success', 'Gérant associé avec succès au service.');
 }
+
+public function services_actifs()
+{
+    $delivery_services = DeliveryService::where('email_verified', true)->with('utilisateurs')->paginate(10);
+    return view('delivery_services.services_actifs', compact('delivery_services'));
+}
+
+    public function services_inactifs()
+    {
+        $delivery_services = DeliveryService::where('email_verified', false)->with('utilisateurs')->paginate(10);
+        return view('delivery_services.services_inactifs', compact('delivery_services'));
+    }
+
+        public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $delivery_services = DeliveryService::where('code', 'like', "%{$query}%")->with('utilisateurs')->paginate(10);
+
+        return view('delivery_services.index', compact('delivery_services'));
+    }
+
+    public function resendVerificationEmail($id)
+    {
+        $deliveryService = DeliveryService::findOrFail($id);
+
+        if ($deliveryService->email_verified) {
+            return response()->json(['message' => 'Ce service est déjà vérifié.'], 400);
+        }
+
+        // Vérifier si le token existe, sinon en générer un nouveau
+        if (empty($deliveryService->email_verification_token)) {
+            $deliveryService->email_verification_token = \Illuminate\Support\Str::random(64);
+            $deliveryService->save();
+        }
+
+        try {
+            // Renvoyer l'email de vérification
+            $deliveryService->notify(new \App\Notifications\VerifyDeliveryServiceEmail($deliveryService));
+            return response()->json(['message' => 'E-mail de vérification renvoyé avec succès.']);
+        } catch (\Exception $e) {
+            \Log::error("Erreur lors du renvoi de l'email de vérification pour le service " . $deliveryService->id . ": " . $e->getMessage());
+            return response()->json(['message' => "Impossible d'envoyer l'e-mail de vérification. Veuillez vérifier la configuration."], 500);
+        }
+    }
 
 
 }

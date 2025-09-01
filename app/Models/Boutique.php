@@ -8,6 +8,7 @@ class Boutique extends Model
 {
     protected $fillable = [
         'nom_boutique',
+        'code',
         'adresse',
         'commune',
         'telephone',
@@ -15,6 +16,8 @@ class Boutique extends Model
         'statut',
         'logo',
         'responsable_id',
+        'pin_code',
+        'email_verified_at',
     ];
 
     public function responsable()

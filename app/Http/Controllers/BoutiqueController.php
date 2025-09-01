@@ -6,9 +6,12 @@ use App\Models\Boutique;
 use Illuminate\Http\Request;
 use App\Models\Utilisateur;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\BoutiqueVerificationMail;
 
 class BoutiqueController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -37,18 +40,29 @@ class BoutiqueController extends Controller
             'adresse' => 'required|string',
             'commune' => 'required|string|max:255',
             'telephone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-            'responsable' => 'required|string|max:255',
-            // Supprimer les champs created_at et updated_at de la validation
+            'email' => 'nullable|email|max:255|unique:boutiques,email',
+
         ]);
-    
-        // Ajouter le statut par défaut
+
+        // Set default status and generate PIN
         $validated['statut'] = 'Inactive';
-    
+        $validated['pin_code'] = mt_rand(100000, 999999); // Generate a 6-digit PIN
+        
+        // Generate unique boutique code
+        $yearSuffix = substr(date('Y'), -2); // Get last 2 digits of year
+        $randomCode = strtoupper(substr(uniqid(), -8)); // Generate 8 character random code
+        $validated['code'] = "BO{$yearSuffix}-{$randomCode}";
+
         try {
-            Boutique::create($validated);
+            $boutique = Boutique::create($validated);
+
+            // Send verification email if an email is provided
+            if ($boutique->email) {
+                Mail::to($boutique->email)->send(new BoutiqueVerificationMail($boutique));
+            }
+
             return redirect()->route('boutiques.index')
-                ->with('success', 'Boutique créée avec succès !');
+                ->with('success', 'Boutique créée avec succès ! Un e-mail de vérification a été envoyé si une adresse e-mail a été fournie.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
@@ -93,7 +107,9 @@ class BoutiqueController extends Controller
      */
     public function destroy(Boutique $boutique)
     {
-        //
+        $boutique->delete();
+        return redirect()->route('boutiques.index')
+                     ->with('success', 'Boutique supprimée avec succès.');
     }
 
     public function profile($id)
@@ -147,4 +163,77 @@ class BoutiqueController extends Controller
                     ->with('popup', true)
                     ->with('success', 'Logo mis à jour avec succès.');
         }
+
+    public function addDeliveryService(Request $request, $id)
+    {
+        $boutique = Boutique::findOrFail($id);
+        $deliveryServices = $request->input('delivery_services', []);
+
+        $boutique->deliveryServices()->syncWithoutDetaching($deliveryServices);
+
+        return redirect()->route('boutiques.profile', $boutique->id)
+                         ->with('success', 'Services de livraison associés avec succès.');
+    }
+
+    public function showVerificationForm()
+    {
+        return view('boutiques.verify');
+    }
+
+    public function verifyPin(Request $request)
+    {
+        $request->validate([
+            'pin_code' => 'required|string',
+        ]);
+
+        $boutique = Boutique::where('pin_code', $request->pin_code)->first();
+
+        if (!$boutique) {
+            return redirect()->back()->with('error', 'Code PIN invalide ou expiré.');
+        }
+
+        $boutique->email_verified_at = now();
+        $boutique->statut = 'Active';
+        $boutique->pin_code = null; // Clear the PIN after verification
+        $boutique->save();
+
+        return redirect()->route('boutiques.index')->with('success', 'Votre boutique a été vérifiée avec succès et activée.');
+    }
+
+    public function boutiquesActives()
+    {
+        $boutiques = Boutique::whereNotNull('email_verified_at')->with('clients')->get();
+        return view('boutiques.boutiques_actives', compact('boutiques'));
+    }
+
+    public function boutiquesInactives()
+    {
+        $boutiques = Boutique::whereNull('email_verified_at')->with('clients')->get();
+        return view('boutiques.boutiques_inactives', compact('boutiques'));
+    }
+
+    public function resendVerification(Boutique $boutique)
+    {
+        // Check if boutique has an email
+        if (!$boutique->email) {
+            return redirect()->back()->with('error', 'Cette boutique n\'a pas d\'adresse e-mail.');
+        }
+
+        // Check if boutique is already verified
+        if ($boutique->email_verified_at) {
+            return redirect()->back()->with('error', 'Cette boutique est déjà vérifiée.');
+        }
+
+        // Generate new PIN (regenerate if exists or create if doesn't exist)
+        $boutique->pin_code = mt_rand(100000, 999999);
+        $boutique->save();
+
+        // Send verification email
+        try {
+            Mail::to($boutique->email)->send(new BoutiqueVerificationMail($boutique));
+            return redirect()->back()->with('success', 'E-mail de vérification renvoyé avec succès.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erreur lors de l\'envoi de l\'e-mail : ' . $e->getMessage());
+        }
+    }
 }

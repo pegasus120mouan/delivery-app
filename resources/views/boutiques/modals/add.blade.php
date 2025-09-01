@@ -28,10 +28,6 @@
             <label for="commune" class="form-label">Commune</label>
             <input type="text" name="commune" id="commune" class="form-control" placeholder="Commune" required>
           </div>
-          <div class="mb-3">
-            <label for="responsable" class="form-label">Responsable</label>
-            <input type="text" name="responsable" id="responsable" class="form-control" placeholder="Responsable" required>
-          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

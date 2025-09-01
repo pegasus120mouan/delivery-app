@@ -88,15 +88,16 @@
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#editServiceInfo" data-toggle="tab">Modifier mes informations</a></li>
                   <li class="nav-item"><a class="nav-link" href="#attribuerGerant" data-toggle="tab">Attribuer un gérant</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#myBoutiques" data-toggle="tab">Mes boutiques</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#myDrivers" data-toggle="tab">Mes Livreurs</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
                 <div class="tab-content">
                   <div class="active tab-pane" id="editServiceInfo">
-                  <div class="tab-pane" id="settings">
-                  <form class="form-horizontal" action="{{ route('delivery_services.update', $deliveryService->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
+                    <form class="form-horizontal" action="{{ route('delivery_services.update', $deliveryService->id) }}" method="POST">
+                      @csrf
+                      @method('PUT')
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Nom</label>
                         <div class="col-sm-10">
@@ -104,21 +105,21 @@
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputEmail" class="col-sm-2 col-form-label">Téléphone</label>
+                        <label for="inputTelephone" class="col-sm-2 col-form-label">Téléphone</label>
                         <div class="col-sm-10">
-                          <input type="text" name="telephone" value="{{ $deliveryService->telephone }}" class="form-control" id="inputEmail" placeholder="Téléphone">
+                          <input type="text" name="telephone" value="{{ $deliveryService->telephone }}" class="form-control" id="inputTelephone" placeholder="Téléphone">
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputEmail" class="col-sm-2 col-form-label">E-mail</label>
+                        <label for="inputEmailEdit" class="col-sm-2 col-form-label">E-mail</label>
                         <div class="col-sm-10">
-                          <input type="email" name="email" value="{{ $deliveryService->email }}" class="form-control" id="inputEmail" placeholder="Email">
+                          <input type="email" name="email" value="{{ $deliveryService->email }}" class="form-control" id="inputEmailEdit" placeholder="Email">
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputSkills" class="col-sm-2 col-form-label">Adresse</label>
+                        <label for="inputAdresse" class="col-sm-2 col-form-label">Adresse</label>
                         <div class="col-sm-10">
-                          <input type="text" name="adresse" value="{{ $deliveryService->adresse }}" class="form-control" id="inputSkills" placeholder="Adresse">
+                          <input type="text" name="adresse" value="{{ $deliveryService->adresse }}" class="form-control" id="inputAdresse" placeholder="Adresse">
                         </div>
                       </div>
                       <div class="form-group row">
@@ -128,84 +129,126 @@
                       </div>
                     </form>
                   </div>
-                  </div>
                   <!-- /.tab-pane -->
+
                   <div class="tab-pane" id="attribuerGerant">
-                    <!-- The timeline -->
-
                     <form action="{{ route('delivery_services.updateGerant', $deliveryService->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="form-group">
-                <label for="gerant_id">Choisir un gérant</label>
-                <select name="gerant_id" id="gerant_id" class="form-control" required>
-                    <option value="">-- Sélectionner --</option>
-                    @foreach($gerants as $gerant)
-                        <option value="{{ $gerant->id }}">
-                            {{ $gerant->nom }} {{ $gerant->prenoms }} ({{ $gerant->email }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-success">
-                Associer
-            </button>
-            <a href="{{ route('delivery_services.index') }}" class="btn btn-secondary">
-                Annuler
-            </a>
-        </form>
+                      @csrf
+                      @method('PUT')
+                      <div class="form-group">
+                          <label for="gerant_id">Choisir un gérant</label>
+                          <select name="gerant_id" id="gerant_id" class="form-control" required>
+                              <option value="">-- Sélectionner --</option>
+                              @foreach($gerants as $gerant)
+                                  <option value="{{ $gerant->id }}">
+                                      {{ $gerant->nom }} {{ $gerant->prenoms }} ({{ $gerant->email }})
+                                  </option>
+                              @endforeach
+                          </select>
+                      </div>
+                      <button type="submit" class="btn btn-success">Associer</button>
+                      <a href="{{ route('delivery_services.index') }}" class="btn btn-secondary">Annuler</a>
+                    </form>
                   </div>
                   <!-- /.tab-pane -->
 
-                  <div class="tab-pane" id="settings">
-                    <form class="form-horizontal">
-                      <div class="form-group row">
-                        <label for="inputName" class="col-sm-2 col-form-label">Ancien mot de passe</label>
-                        <div class="col-sm-10">
-                          <input type="password" name="ancien_password" class="form-control" id="inputName" placeholder="Ancien mot de passe">
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputEmail" class="col-sm-2 col-form-label">ENmail</label>
-                        <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputName2" placeholder="Name">
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
-                        <div class="col-sm-10">
-                          <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-10">
-                          <div class="checkbox">
-                            <label>
-                              <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                            </label>
+                  <div class="tab-pane" id="myBoutiques">
+
+                    <div class="mb-3">
+                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addBoutiqueModal">
+                        Ajouter une boutique
+                    </button>
+                    </div>
+                    @if($deliveryService->boutiques->count() > 0)
+                      <table class="table table-bordered table-hover">
+                          <thead>
+                              <tr>
+                                  <th>Code Boutique</th>
+                                  <th>Nom Boutique</th>
+                                  <th>Contact Boutique</th>
+                                  <th>Contact Gérant du service</th>
+                              </tr>
+                          </thead>
+                    <tbody>
+                        @foreach($deliveryService->boutiques as $boutique)
+                            <tr>
+                                <td><span class="badge badge-info">{{ $boutique->code }}</span></td>
+                                <td>{{ $boutique->nom_boutique }}</td>
+                                <td>
+                                    @if($boutique->telephone)
+                                        <i class="fas fa-phone mr-2"></i> {{ $boutique->telephone }}
+                                        <br>
+                                    @endif
+                                    @if($boutique->email)
+                                        <i class="fas fa-envelope mr-2"></i> {{ $boutique->email }}
+                                    @endif
+                                </td>
+                                <td>  
+                                    @forelse($deliveryService->utilisateurs->where('role', 'gerant') as $user)
+                                        <strong>{{ $user->prenoms }} {{ $user->nom }}</strong><br>
+                                        @if($user->contact)     
+                                            <i class="fas fa-phone mr-2"></i> {{ $user->contact }}<br>
+                                        @endif  
+                                        @if($user->email)
+                                            <i class="fas fa-envelope mr-2"></i> {{ $user->email }}
+                                        @endif
+                                        @if(!$loop->last)<hr>@endif
+                                    @empty
+                                        <span class="text-muted">Aucun gérant assigné</span>
+                                    @endforelse
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                        @else
+                          <div class="alert alert-info">
+                              Aucune boutique n'est associée à ce service de livraison pour le moment.
                           </div>
-                        </div>
+                        @endif
+                    </div>
+                  <!-- /.tab-pane -->
+
+                  <div class="tab-pane" id="myDrivers">
+                    <div class="mb-3">
+                      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addDriverModal">
+                          Ajouter un livreur
+                      </button>
+                    </div>
+                    @if($deliveryService->utilisateurs->where('role', 'livreur')->count() > 0)
+                      <table class="table table-bordered table-hover">
+                          <thead>
+                              <tr>
+                                  <th>Photo</th>
+                                  <th>Code</th>
+                                  <th>Nom</th>
+                                  <th>Contact</th>
+                                  <th>Email</th>
+                                  <th>Statut</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @foreach($deliveryService->utilisateurs->where('role', 'livreur') as $driver)
+                                  <tr>
+                                      <td>
+                                          <img src="{{ asset('storage/utilisateurs/' . $driver->avatar) }}" alt="Photo de {{ $driver->prenoms }} {{ $driver->nom }}" class="img-circle img-size-50 mr-2">
+                                      </td>
+                                      <td><span class="badge badge-primary">{{ $driver->code }}</span></td>
+                                      <td>{{ $driver->prenoms }} {{ $driver->nom }}</td>
+                                      <td>{{ $driver->contact }}</td>
+                                      <td>{{ $driver->email }}</td>
+                                      <td>
+                                          <span class="badge badge-success">Actif</span>
+                                      </td>
+                                  </tr>
+                              @endforeach
+                          </tbody>
+                      </table>
+                    @else
+                      <div class="alert alert-info">
+                          Aucun livreur n'est associé à ce service de livraison pour le moment.
                       </div>
-                      <div class="form-group row">
-                        <div class="offset-sm-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger">Submit</button>
-                        </div>
-                      </div>
-                    </form>
+                    @endif
                   </div>
                   <!-- /.tab-pane -->
                 </div>

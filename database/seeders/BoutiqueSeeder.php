@@ -14,6 +14,7 @@ class BoutiqueSeeder extends Seeder
     {
         DB::table('boutiques')->insert([
             [
+                'code' => Str::random(6),
                 'nom_boutique' => 'Fashion Store',
                 'adresse' => 'Cocody Angré, Abidjan',
                 'commune' => 'Cocody',
@@ -24,6 +25,7 @@ class BoutiqueSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'code' => Str::random(6),
                 'nom_boutique' => 'TechZone',
                 'adresse' => 'Yopougon Niangon',
                 'commune' => 'Yopougon',
@@ -34,6 +36,7 @@ class BoutiqueSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
+                'code' => Str::random(6),
                 'nom_boutique' => 'Maison Délices',
                 'adresse' => 'Marcory Zone 4',
                 'commune' => 'Marcory',

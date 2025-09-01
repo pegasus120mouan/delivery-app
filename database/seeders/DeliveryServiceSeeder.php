@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\DeliveryService;
 
 class DeliveryServiceSeeder extends Seeder
 {
@@ -54,7 +55,7 @@ class DeliveryServiceSeeder extends Seeder
                 'email' => 'service@citydelivery.com',
                 'telephone' => null, // Téléphone nullable
                 'logo' => 'city_delivery.png',
-                'adresse' => null, // Adresse nullable
+                'adresse' => 'City Delivery',
                 'email_verified' => true,
                 'email_verification_token' => null,
                 'created_at' => now(),
@@ -62,8 +63,14 @@ class DeliveryServiceSeeder extends Seeder
             ]
         ];
 
-        // Insertion des données
-        DB::table('delivery_services')->insert($deliveryServices);
+        // Insertion des données en utilisant le modèle pour déclencher l'événement 'creating'
+        foreach ($deliveryServices as $serviceData) {
+            // Assurer que le token est généré si nécessaire
+            if (isset($serviceData['email_verified']) && !$serviceData['email_verified'] && !isset($serviceData['email_verification_token'])) {
+                $serviceData['email_verification_token'] = Str::random(60);
+            }
+            DeliveryService::create($serviceData);
+        }
 
         $this->command->info('Services de livraison créés avec succès!');
     }

@@ -19,6 +19,7 @@ class Utilisateur extends Authenticatable
         'whatsapp',
         'lieu_habitation',
         'role',
+        'code',
         'email',
         'login',
         'password',
@@ -35,7 +36,46 @@ class Utilisateur extends Authenticatable
 
     protected $casts = [
         'email_verified' => 'boolean',
-    ];  
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (!$user->code) {
+                $user->code = self::generateUserCode($user->role);
+            }
+        });
+    }
+
+    public static function generateUserCode($role)
+    {
+        $year = substr(date('Y'), -2); // Get last 2 digits of year
+        
+        // Define prefix based on role
+        $prefix = match($role) {
+            'client' => 'CL',
+            'livreur' => 'LV',
+            'gerant' => 'GE',
+            default => 'US', // Default prefix for other roles
+        };
+
+        // Get the last sequence number for this role and year
+        $lastUser = self::where('role', $role)
+                       ->where('code', 'like', "{$prefix}{$year}-%")
+                       ->orderBy('code', 'desc')
+                       ->first();
+
+        if ($lastUser) {
+            $lastSequence = (int) substr($lastUser->code, -3);
+            $sequence = str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
+        } else {
+            $sequence = '001';
+        }
+
+        return "{$prefix}{$year}-{$sequence}";
+    }
 
     public function deliveryService(): BelongsTo
     {

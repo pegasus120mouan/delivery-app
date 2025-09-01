@@ -40,6 +40,10 @@ Route::get('delivery_services/{id}/associer-gerant', [DeliveryServiceController:
 Route::put('delivery_services/{id}/associer-gerant', [DeliveryServiceController::class, 'updateGerant'])->name('delivery_services.updateGerant');
 
 
+Route::get('delivery_services/services_actifs', [DeliveryServiceController::class, 'services_actifs'])->name('delivery_services.services_actifs');
+Route::get('delivery_services/services_inactifs', [DeliveryServiceController::class, 'services_inactifs'])->name('delivery_services.services_inactifs');
+Route::post('delivery_services/{id}/resend-verification', [DeliveryServiceController::class, 'resendVerificationEmail'])->name('delivery_services.resend_verification');
+Route::get('delivery_services/search', [DeliveryServiceController::class, 'search'])->name('delivery_services.search');
 Route::resource("delivery_services", DeliveryServiceController::class);
 
 // Route pour afficher les commandes par service de livraison
@@ -60,9 +64,16 @@ Route::resource("utilisateurs", UtilisateurController::class);
 
 /* Route Boutique */
 Route::put('/boutiques/{boutique}/update-logo', [BoutiqueController::class, 'updateLogo'])->name('boutiques.update-logo');
+Route::post('/boutiques/{id}/add-delivery-service', [BoutiqueController::class, 'addDeliveryService'])->name('boutiques.addDeliveryService');
 Route::get('/boutiques/{boutique}/profile', [BoutiqueController::class, 'profile'])->name('boutiques.profile');
 
 Route::put('/boutiques/{boutique}/associer-client', [BoutiqueController::class, 'updateClient'])->name('boutiques.updateClient');
+
+Route::get('/boutiques/verify', [BoutiqueController::class, 'showVerificationForm'])->name('boutiques.showVerificationForm');
+Route::post('/boutiques/verify', [BoutiqueController::class, 'verifyPin'])->name('boutiques.verifyPin');
+Route::get('/boutiques_actives', [BoutiqueController::class, 'boutiquesActives'])->name('boutiques.boutiques_actives');
+Route::get('/boutiques_inactives', [BoutiqueController::class, 'boutiquesInactives'])->name('boutiques.boutiques_inactives');
+Route::post('/boutiques/{boutique}/resend-verification', [BoutiqueController::class, 'resendVerification'])->name('boutiques.resendVerification');
 
 Route::resource('boutiques', BoutiqueController::class);
 /* Fin route Boutique */

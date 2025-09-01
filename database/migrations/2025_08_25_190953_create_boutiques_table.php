@@ -18,7 +18,7 @@ return new class extends Migration
         $table->string('commune', 255);
         $table->string('telephone', 20);
         $table->string('email', 255)->nullable();
-        
+        $table->string('pin_code')->nullable();
 
         // clé étrangère vers la table utilisateurs (nullable)
         $table->foreignId('responsable_id')

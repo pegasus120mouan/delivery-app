@@ -31,6 +31,8 @@
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWd4r2fNp4P9F1wagyJ7kUnYFPQQg4HI7Qd1uTJoV2LDh7AHXJ3u3EV5Zw80rA+5r+Z1QQQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- DataTables -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
 
 
@@ -329,9 +331,15 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="" class="nav-link">
+                  <a href="{{route('delivery_services.services_actifs')}}" class="nav-link">
                     <i class="fas fa-user-tie"></i>
-                    <p>Associer un gérant</p>
+                    <p>Services Actifs</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('delivery_services.services_inactifs')}}" class="nav-link">
+                    <i class="fas fa-user-times"></i>
+                    <p>Services Inactifs</p>
                   </a>
                 </li>
               </ul>
@@ -353,9 +361,15 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="contrats.php" class="nav-link">
+                  <a href="{{route('boutiques.boutiques_actives')}}" class="nav-link">
                     <i class="fas fa-folder-open"></i>
-                    <p>Contrats</p>
+                    <p>Boutiques Actives</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{{route('boutiques.boutiques_inactives')}}" class="nav-link">
+                    <i class="fas fa-folder-open"></i>
+                    <p>Boutiques Inactives</p>
                   </a>
                 </li>
               </ul>
@@ -680,5 +694,9 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+@stack('scripts')
 </body>
 </html>

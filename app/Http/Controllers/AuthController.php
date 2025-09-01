@@ -37,7 +37,23 @@ class AuthController extends Controller
             Auth::login($user, $request->has('remember'));
             $request->session()->regenerate();
 
-            // Redirection vers utilisateurs.index
+            // Tenter de récupérer le service de livraison via la relation many-to-many
+            $deliveryService = $user->deliveryServices->first();
+
+            // Si aucun service n'est trouvé, essayer avec la relation one-to-one
+            if (!$deliveryService) {
+                $deliveryService = $user->deliveryService;
+            }
+
+            // Si un service de livraison est trouvé, stocker ses informations en session
+            if ($deliveryService) {
+                session([
+                    'delivery_service_id' => $deliveryService->id,
+                    'delivery_service_nom' => $deliveryService->nom,
+                ]);
+            }
+
+            // Redirection vers la page des commandes
             return redirect()->route('commandes.index');
         }
 

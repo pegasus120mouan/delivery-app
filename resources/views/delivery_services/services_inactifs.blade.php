@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Liste des utilisateurs')
+@section('title', 'Liste des services de livraison')
 
 @section('content')
 
@@ -10,12 +10,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Gestion des utilisateurs</h1>
+            <h1 class="m-0">Gestion des services de livraison</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">{{ Auth::user()->role }}</a></li>
-              <li class="breadcrumb-item active">Utilisateurs</li>
+              <li class="breadcrumb-item active">Services de livraison</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -32,9 +32,9 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{{ $utilisateurs->count() }}</h3>
+                <h3>{{ $delivery_services->count() }}</h3>
 
-                <p>Utilisateurs Total</p>
+                <p>Services de livraison Total</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
@@ -47,7 +47,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-              <h3>{{ $utilisateurs->where('role', 'admin')->count() }}</h3>
+              <h3>0</h3>
 
                 <p>Administrateurs</p>
               </div>
@@ -62,7 +62,7 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-              <h3>{{ $utilisateurs->where('role', 'livreur')->count() }}</h3>
+              <h3>{{ $delivery_services->count() }}</h3>
 
                 <p>Livreurs</p>
               </div>
@@ -77,7 +77,7 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-              <h3>{{ $utilisateurs->where('role', 'client')->count() }}</h3>
+              <h3>0</h3>
 
                 <p>Clients</p>
               </div>
@@ -103,11 +103,11 @@
     }
    </style>
 
-<h1 class="text-center">Liste des utilisateurs</h1>
+<h1 class="text-center">Liste des services de livraison inactifs</h1>
  <!--   Début container pour le menu -->
     <div class="block-container">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">
-          <i class="fa fa-user-plus"></i> Enregistrer un utilisateur
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addServiceModal">
+          <i class="fa fa-user-plus"></i> Enregistrer un service de livraison
       </button>
 
 
@@ -127,65 +127,74 @@
 
      <!--   Fin block container pour le menu -->
 
-     <table id="example2" class="table table-bordered table-hover">
+     <table id="example2" class="table table-bordered table-hover" style="width:100%">
 
              <thead>
-                <tr>
-                    <th>Avatar</th>
+               <tr style="background-color: #000000; color: #ffffff;">
+                    <th>Logo</th>
                     <th>Code</th>
-                    <th>Service de livraison</th>
-                    <th>Nom</th>
-                    <th>Prenoms</th>
-                    <th>Login</th>
-                    <th>Role</th>
-                    <th>Contact</th>
-                    <th>Lieu d'Habitation</th>
-                    <th>Whatsapp</th>
+                    <th>Nom service</th>
+                    <th>Email</th>
+                    <th>Telephone</th>
+                    <th>Adresse</th>
+                    <th>Gérants</th>
+                    <th>Statut</th>
                     <th>Actions</th>
                 </tr>
              </thead>
              <tbody>
-                @foreach ($utilisateurs as $utilisateur)
+                @foreach ($delivery_services as $delivery_service)
                 <tr>
                     <td>
-                        <a href="{{ route('utilisateurs.profile', $utilisateur->id) }}">
-                            <img src="{{ asset('storage/utilisateurs/' . $utilisateur->avatar) }}" 
+                        <a href="{{ route('delivery_services.profile', $delivery_service->id) }}">
+                            <img src="{{ asset('storage/delivery_services/' . $delivery_service->logo) }}" 
                                 alt="Avatar" 
                                 class="img-circle" 
                                 style="width: 50px; height: 50px; object-fit: cover; cursor: pointer;"
                                 title="Voir le profil">
                         </a>
                     </td>
-                    <td>{{ $utilisateur->code }}</td>
-                    <td>{{ $utilisateur->deliveryService?->nom ?? 'Non attribué' }}</td>
-                    <td>{{ $utilisateur->nom }}</td>
-                    <td>{{ $utilisateur->prenoms }}</td>
-                    <td>{{ $utilisateur->login }}</td>
-                    <td>{{ $utilisateur->role }}</td>
-                    <td>{{ $utilisateur->contact }}</td>
-                    <td>{{ $utilisateur->lieu_habitation }}</td>
-                    <td>{{ $utilisateur->whatsapp }}</td>
+                    <td>{{ $delivery_service->code }}</td>
+                    <td>{{ $delivery_service->nom }}</td>
+                    <td>{{ $delivery_service->email }}</td>
+                    <td>{{ $delivery_service->telephone }}</td>
+                    <td>{{ $delivery_service->adresse }}</td>
                     <td>
-                        <a href="{{ route('utilisateurs.edit', $utilisateur->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>
-                        <form action="{{ route('utilisateurs.destroy', $utilisateur->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                        </form>
+                      @forelse($delivery_service->utilisateurs as $user)
+                          {{ $user->nom }} {{ $user->prenoms }} <br>
+                      @empty
+                          <span class="badge badge-danger">Pas de gérant associé</span>
+                      @endforelse
+                    </td>
+                    <td>
+                        @if ($delivery_service->email_verified)
+                            <img src="{{ asset('icones/checked.png') }}" 
+                                alt="Logo" 
+                                width="40">
+                        @else
+                            <img src="{{ asset('icones/non_checked.png') }}" 
+                                alt="Logo" 
+                                width="40">
+                        @endif
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm resend-verification-btn" data-id="{{ $delivery_service->id }}">Renvoyer le mail de vérification</button>
                     </td>
                 </tr>
                 @endforeach
              </tbody>
      
           </table>
-          
+
+                    
         </div>
         
       </div>
     </section>
    
   </div>
-  @include('utilisateurs.modals.add')
+  @include('delivery_services.modals.add')
+  @include('delivery_services.modals.update')
 
   <!-- Modal de Succès -->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -211,4 +220,80 @@
 </div>
 
 
+@push('scripts')
+<script>
+  $(function () {
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+      "scrollY": "300px",
+      "scrollCollapse": true,
+    });
+  });
+</script>
+@endpush
+
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const resendButtons = document.querySelectorAll('.resend-verification-btn');
+
+    resendButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            if (confirm("Êtes-vous sûr de vouloir renvoyer l'e-mail de vérification ?")) {
+            const serviceId = this.getAttribute('data-id');
+            const url = '{{ route("delivery_services.resend_verification", [":serviceId"]) }}'.replace(':serviceId', serviceId);
+
+            // Change button to show loading state
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Envoi...';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                // Restore button state
+                this.disabled = false;
+                this.innerHTML = 'Renvoyer le mail de vérification';
+                return response.json();
+            })
+            .then(data => {
+                if (data.message) {
+                    // Show success modal
+                    $('#successMessage').text(data.message);
+                    $('#successModal').modal('show');
+
+                    // Hide modal and reload page after 3 seconds
+                    setTimeout(function() {
+                        $('#successModal').modal('hide');
+                        location.reload();
+                    }, 3000);
+                } else {
+                    alert('Une erreur est survenue.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Restore button state
+                this.disabled = false;
+                this.innerHTML = 'Renvoyer le mail de vérification';
+                alert('Une erreur est survenue lors de la communication avec le serveur.');
+            });
+            }
+        });
+    });
+});
+</script>
+@endpush
