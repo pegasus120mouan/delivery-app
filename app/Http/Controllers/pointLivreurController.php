@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\pointLivreur;
 use Illuminate\Http\Request;
 use App\Models\Utilisateur;
+use App\Models\DeliveryService;
 
 class pointLivreurController extends Controller
 {
@@ -18,8 +19,9 @@ class pointLivreurController extends Controller
         })->get();
     
         $utilisateurs = Utilisateur::where('role', 'livreur')->get();
+        $delivery_services = DeliveryService::all();
     
-        return view('points_livreurs.index', compact('pointsLivreurs', 'utilisateurs'));
+        return view('points_livreurs.index', compact('pointsLivreurs', 'utilisateurs', 'delivery_services'));
     }
 
     /**
@@ -37,9 +39,10 @@ class pointLivreurController extends Controller
     {
         // Validation des données
         $validated = $request->validate([
-            'utilisateur_id'  => 'required|exists:utilisateurs,id',
-            'recettes'        => 'required|integer|min:0',
-            'depenses'        => 'required|integer|min:0',
+            'utilisateur_id'     => 'required|exists:utilisateurs,id',
+            'delivery_service_id' => 'required|exists:delivery_services,id',
+            'recettes'           => 'required|integer|min:0',
+            'depenses'           => 'required|integer|min:0',
           ]);
 
                 // Calcul du coût réel
@@ -77,6 +80,7 @@ class pointLivreurController extends Controller
     $point = PointLivreur::findOrFail($id); // ✅ récupère l'enregistrement existant
     
     $point->update([
+        'delivery_service_id' => $request->delivery_service_id,
         'recettes' => $request->recettes,
         'depenses' => $request->depenses,
         'date_jour' => $request->date_jour,

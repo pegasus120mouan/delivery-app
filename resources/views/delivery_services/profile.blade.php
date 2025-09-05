@@ -265,4 +265,90 @@
     <!-- /.content -->
   </div>
 
+<!-- Modal pour ajouter une boutique -->
+<div class="modal fade" id="addBoutiqueModal" tabindex="-1" aria-labelledby="addBoutiqueModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addBoutiqueModalLabel">Ajouter une boutique</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('delivery_services.associate_boutique', $deliveryService->id) }}" method="POST">
+          @csrf
+          <div class="mb-3">
+            <label for="boutique_id" class="form-label">Sélectionner une boutique</label>
+            <select name="boutique_id" id="boutique_id" class="form-control" required>
+              <option value="">-- Choisir une boutique --</option>
+              @foreach($boutiques as $boutique)
+                @if(!$deliveryService->boutiques->contains($boutique->id))
+                  <option value="{{ $boutique->id }}">
+                    {{ $boutique->code }} - {{ $boutique->nom_boutique }}
+                    @if($boutique->commune)
+                      ({{ $boutique->commune }})
+                    @endif
+                  </option>
+                @endif
+              @endforeach
+            </select>
+          </div>
+          
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle mr-2"></i>
+            Seules les boutiques non encore associées à ce service sont affichées.
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Associer la boutique</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour ajouter un livreur -->
+<div class="modal fade" id="addDriverModal" tabindex="-1" aria-labelledby="addDriverModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDriverModalLabel">Ajouter un livreur</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('delivery_services.associate_driver', $deliveryService->id) }}" method="POST">
+          @csrf
+          <div class="mb-3">
+            <label for="driver_id" class="form-label">Sélectionner un livreur</label>
+            <select name="driver_id" id="driver_id" class="form-control" required>
+              <option value="">-- Choisir un livreur --</option>
+              @foreach($livreurs as $livreur)
+                @if(!$deliveryService->utilisateurs->contains($livreur->id))
+                  <option value="{{ $livreur->id }}">
+                    {{ $livreur->code }} - {{ $livreur->prenoms }} {{ $livreur->nom }}
+                    @if($livreur->contact)
+                      ({{ $livreur->contact }})
+                    @endif
+                  </option>
+                @endif
+              @endforeach
+            </select>
+          </div>
+          
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle mr-2"></i>
+            Seuls les livreurs non encore associés à ce service sont affichés.
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Associer le livreur</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection

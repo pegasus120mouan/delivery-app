@@ -19,7 +19,7 @@ class DeliveryServiceSeeder extends Seeder
         $deliveryServices = [
             [
                 'nom' => 'Livraison Express',
-                'email' => 'contact@livraisonexpress.com',
+                'email' => 'contact1@livraisonexpress.com',
                 'telephone' => '+33123456789',
                 'logo' => 'express_delivery.png',
                 'adresse' => '123 Avenue des Livraisons, Paris',
@@ -27,10 +27,11 @@ class DeliveryServiceSeeder extends Seeder
                 'email_verification_token' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'code' => 'SE25-0032EB58',
             ],
             [
                 'nom' => 'Rapid Delivery',
-                'email' => 'info@rapiddelivery.fr',
+                'email' => 'info@rapiddelivery1.fr',
                 'telephone' => '+33987654321',
                 'logo' => 'rapid_delivery.png',
                 'adresse' => '456 Rue de la Vitesse, Lyon',
@@ -38,10 +39,11 @@ class DeliveryServiceSeeder extends Seeder
                 'email_verification_token' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'code' => 'SE25-0031EB58',
             ],
             [
                 'nom' => 'Eco Livraison',
-                'email' => 'eco@livraison-verte.fr',
+                'email' => 'eco@livraison-verte1.fr',
                 'telephone' => '+33445566778',
                 'logo' => 'default.png', // Utilise la valeur par défaut
                 'adresse' => '789 Boulevard Écologique, Marseille',
@@ -49,10 +51,11 @@ class DeliveryServiceSeeder extends Seeder
                 'email_verification_token' => Str::random(60),
                 'created_at' => now(),
                 'updated_at' => now(),
+                'code' => 'SE25-0030EB58',
             ],
             [
                 'nom' => 'City Delivery',
-                'email' => 'service@citydelivery.com',
+                'email' => 'service1@citydelivery.com',
                 'telephone' => null, // Téléphone nullable
                 'logo' => 'city_delivery.png',
                 'adresse' => 'City Delivery',
@@ -60,6 +63,7 @@ class DeliveryServiceSeeder extends Seeder
                 'email_verification_token' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'code' => 'SE25-0028EB58',
             ]
         ];
 

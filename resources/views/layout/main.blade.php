@@ -262,24 +262,23 @@
                 <p>
                   Points de livraisons
                   <i class="fas fa-angle-left right"></i>
-                  <span class="badge badge-info right">6</span>
                 </p>
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
                   <a href="{{ route('points_livreurs.index') }}" class="nav-link">
-                    <i class="fas fa-balance-scale"></i>
+                    <i class="fas fa-shipping-fast"></i>
                     <p>Points des livreurs</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="{{ route('points_livreurs.index') }}" class="nav-link">
-                    <i class="fas fa-wallet"></i>
-                    <p>Points des clients</p>
+                  <a href="{{ route('montants.index') }}" class="nav-link">
+                    <i class="fas fa-balance-scale-right"></i>
+                    <p>Points clients</p>
                   </a>
                 </li>
                  <li class="nav-item">
-                  <a href="liste_montants.php" class="nav-link">
+                  <a href="{{ route('montants.index') }}" class="nav-link">
                     <i class="fas fa-list"></i>
                     <p>Liste des montants</p>
                   </a>

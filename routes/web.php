@@ -9,6 +9,7 @@ use App\Http\Controllers\BoutiqueController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\PointController;
 use App\Http\Controllers\pointLivreurController;
+use App\Http\Controllers\MontantController;
 
 
 
@@ -38,6 +39,8 @@ Route::put('/delivery_services/{deliveryService}/update-logo', [DeliveryServiceC
 
 Route::get('delivery_services/{id}/associer-gerant', [DeliveryServiceController::class, 'editGerant'])->name('delivery_services.editGerant');
 Route::put('delivery_services/{id}/associer-gerant', [DeliveryServiceController::class, 'updateGerant'])->name('delivery_services.updateGerant');
+Route::post('delivery_services/{id}/associate-boutique', [DeliveryServiceController::class, 'associateBoutique'])->name('delivery_services.associate_boutique');
+Route::post('delivery_services/{id}/associate-driver', [DeliveryServiceController::class, 'associateDriver'])->name('delivery_services.associate_driver');
 
 
 Route::get('delivery_services/services_actifs', [DeliveryServiceController::class, 'services_actifs'])->name('delivery_services.services_actifs');
@@ -111,5 +114,8 @@ Route::post('/point/imprimer', [PointController::class, 'imprimer'])->name('poin
 
 
 Route::resource('points_livreurs', pointLivreurController::class);
+
+// Route pour les montants
+Route::resource('montants', MontantController::class);
 
 

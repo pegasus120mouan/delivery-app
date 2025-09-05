@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('telephone')->nullable();
             $table->string('logo')->default('default.png'); // valeur par défaut
             $table->string('adresse')->nullable();
+            $table->decimal('capital', 15, 2)->nullable(); // Capital du service de livraison
             $table->boolean('email_verified')->default(false);
             $table->string('email_verification_token')->nullable();
             $table->timestamps();

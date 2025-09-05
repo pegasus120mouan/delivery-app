@@ -5,48 +5,37 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class CommandesTableSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('commandes')->insert([
-            [
-                'communes' => 'Abobo',
-                'cout_global' => 15000,
-                'cout_livraison' => 2000,
-                'cout_reel' => 13000,
-                'statut' => 'Livré',
-                'date_reception' => Carbon::now()->subDays(3),
-                'date_livraison' => Carbon::now()->subDay(),
-                'date_retour' => null,
-                'boutique_id' => 1,   // doit exister dans boutiques
-                'livreur_id' => null,    // doit exister dans utilisateurs
-            ],
-            [
-                'communes' => 'Cocody',
-                'cout_global' => 22000,
-                'cout_livraison' => 3000,
-                'cout_reel' => 19000,
-                'statut' => 'Non Livré',
-                'date_reception' => Carbon::now()->subDays(2),
-                'date_livraison' => null,
-                'date_retour' => null,
-                'boutique_id' => 1,
-                'livreur_id' => null, // pas encore affecté
-            ],
-            [
-                'communes' => 'Yopougon',
-                'cout_global' => 12000,
-                'cout_livraison' => 1500,
-                'cout_reel' => 10500,
-                'statut' => 'Retourné',
-                'date_reception' => Carbon::now()->subDays(5),
-                'date_livraison' => Carbon::now()->subDays(4),
-                'date_retour' => Carbon::now()->subDays(2),
-                'boutique_id' => 1,
-                'livreur_id' => null,
-            ],
-        ]);
+        $faker = Faker::create();
+
+        for ($i = 1; $i <= 100; $i++) {
+            $dateReception = $faker->dateTimeBetween('-10 days', 'now');
+            $dateLivraison = $faker->boolean(70) ? Carbon::instance($faker->dateTimeBetween($dateReception, 'now')) : null;
+            $dateRetour = ($dateLivraison && $faker->boolean(20)) ? Carbon::instance($faker->dateTimeBetween($dateLivraison, 'now')) : null;
+
+            $coutLivraison = $faker->numberBetween(1000, 5000);
+            $coutReel = $faker->numberBetween(5000, 30000);
+            $coutGlobal = $coutReel + $coutLivraison;
+
+            DB::table('commandes')->insert([
+                'communes'       => $faker->randomElement(['Abobo', 'Cocody', 'Yopougon', 'Treichville', 'Marcory']),
+                'cout_global'    => $coutGlobal,
+                'cout_livraison' => $coutLivraison,
+                'cout_reel'      => $coutReel,
+                'statut' => $faker->randomElement(['Livré', 'Non Livré', 'Retourné']),
+                'date_reception' => $dateReception,
+                'date_livraison' => $dateLivraison,
+                'date_retour'    => $dateRetour,
+                'boutique_id'    => 1,   // adapte si tu as plusieurs boutiques
+                'livreur_id'     => null, // tu pourras tester avec des livreurs plus tard
+                'code'  => 'CMD-' . date('ymd') . '-' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                
+            ]);
+        }
     }
 }

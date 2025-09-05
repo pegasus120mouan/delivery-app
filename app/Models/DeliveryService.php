@@ -15,6 +15,7 @@ class DeliveryService extends Model
         'code',
         'nom',
         'email',
+        'capital',
         'telephone',
         'adresse',
         'email_verification_token',

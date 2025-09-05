@@ -14,6 +14,15 @@
 
         <div class="modal-body">
         <div class="mb-3">
+          <label for="edit_delivery_service_id" class="form-label">Service de livraison</label>
+          <select name="delivery_service_id" id="edit_delivery_service_id" class="form-control" required>
+              <option value="">Sélectionner un service de livraison</option>
+              @foreach ($delivery_services as $service)
+                  <option value="{{ $service->id }}">{{ $service->nom }}</option>
+              @endforeach
+          </select>
+        </div>
+        <div class="mb-3">
           <label for="edit_utilisateur">Livreur</label>
           <input type="text" id="edit_utilisateur" class="form-control" readonly>
           <input type="hidden" id="edit_utilisateur_id" name="utilisateur_id" disabled>
@@ -52,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.addEventListener("click", function () {
             // Remplir les champs avec les données récupérées
             document.getElementById("edit_id").value = this.dataset.id;
+            document.getElementById("edit_delivery_service_id").value = this.dataset.delivery_service_id;
             document.getElementById("edit_utilisateur").value = this.dataset.utilisateur_nom + " " + this.dataset.utilisateur_prenoms;
             document.getElementById("edit_utilisateur_id").value = this.dataset.utilisateur_id;
             document.getElementById("edit_recettes").value = this.dataset.recettes;

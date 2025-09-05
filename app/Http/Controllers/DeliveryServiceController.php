@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Notifications\Notifiable; // Ajouter cette ligne
 use Illuminate\Support\Facades\Storage;
 use App\Models\Utilisateur;
+use App\Models\Boutique;
 
 
 
@@ -177,12 +178,18 @@ public function verifyEmail($token)
     }
          public function profile($id)
         {
-                    $deliveryService = DeliveryService::with('utilisateurs')->findOrFail($id);
+                    $deliveryService = DeliveryService::with('utilisateurs', 'boutiques')->findOrFail($id);
 
                     // On récupère uniquement les utilisateurs qui ont le rôle "gerant"
                     $gerants = Utilisateur::where('role', 'gerant')->get();
+                    
+                    // Récupérer toutes les boutiques pour le modal
+                    $boutiques = Boutique::all();
+                    
+                    // Récupérer tous les livreurs pour le modal
+                    $livreurs = Utilisateur::where('role', 'livreur')->get();
 
-                    return view('delivery_services.profile', compact('deliveryService', 'gerants'));
+                    return view('delivery_services.profile', compact('deliveryService', 'gerants', 'boutiques', 'livreurs'));
         }         
 
     public function editGerant($id)
@@ -252,6 +259,53 @@ public function services_actifs()
             \Log::error("Erreur lors du renvoi de l'email de vérification pour le service " . $deliveryService->id . ": " . $e->getMessage());
             return response()->json(['message' => "Impossible d'envoyer l'e-mail de vérification. Veuillez vérifier la configuration."], 500);
         }
+    }
+
+    public function associateBoutique(Request $request, $id)
+    {
+        $request->validate([
+            'boutique_id' => 'required|exists:boutiques,id'
+        ]);
+
+        $deliveryService = DeliveryService::findOrFail($id);
+        $boutique = Boutique::findOrFail($request->boutique_id);
+
+        // Vérifier si la boutique n'est pas déjà associée
+        if ($deliveryService->boutiques()->where('boutique_id', $request->boutique_id)->exists()) {
+            return redirect()->back()->with('error', 'Cette boutique est déjà associée à ce service de livraison.');
+        }
+
+        // Associer la boutique au service de livraison
+        $deliveryService->boutiques()->attach($request->boutique_id);
+
+        return redirect()->route('delivery_services.profile', $id)
+            ->with('success', 'Boutique "' . $boutique->nom_boutique . '" associée avec succès au service de livraison.');
+    }
+
+    public function associateDriver(Request $request, $id)
+    {
+        $request->validate([
+            'driver_id' => 'required|exists:utilisateurs,id'
+        ]);
+
+        $deliveryService = DeliveryService::findOrFail($id);
+        $driver = Utilisateur::findOrFail($request->driver_id);
+
+        // Vérifier que l'utilisateur est bien un livreur
+        if ($driver->role !== 'livreur') {
+            return redirect()->back()->with('error', 'L\'utilisateur sélectionné n\'est pas un livreur.');
+        }
+
+        // Vérifier si le livreur n'est pas déjà associé
+        if ($deliveryService->utilisateurs()->where('utilisateur_id', $request->driver_id)->exists()) {
+            return redirect()->back()->with('error', 'Ce livreur est déjà associé à ce service de livraison.');
+        }
+
+        // Associer le livreur au service de livraison
+        $deliveryService->utilisateurs()->attach($request->driver_id);
+
+        return redirect()->route('delivery_services.profile', $id)
+            ->with('success', 'Livreur "' . $driver->prenoms . ' ' . $driver->nom . '" associé avec succès au service de livraison.');
     }
 
 

@@ -14,11 +14,47 @@ use Carbon\Carbon;
 
 class CommandeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $commandes = Commande::with(['deliveryService', 'boutique', 'livreur'])
-            ->orderBy('date_reception', 'DESC')
-            ->get();
+        $query = Commande::with(['deliveryService', 'boutique', 'livreur']);
+
+        // Filtrer par code
+        if ($request->filled('code')) {
+            $query->where('code', 'like', '%' . $request->code . '%');
+        }
+
+        // Filtrer par statut
+        if ($request->filled('statut')) {
+            $query->where('statut', $request->statut);
+        }
+
+        // Filtrer par boutique
+        if ($request->filled('boutique_id')) {
+            $query->where('boutique_id', $request->boutique_id);
+        }
+
+        // Filtrer par service de livraison
+        if ($request->filled('delivery_service_id')) {
+            $query->where('delivery_service_id', $request->delivery_service_id);
+        }
+
+        // Filtrer par date de réception
+        if ($request->filled('date_reception')) {
+            $query->whereDate('date_reception', $request->date_reception);
+        }
+
+        // Filtrer par date de livraison
+        if ($request->filled('date_livraison')) {
+            $query->whereDate('date_livraison', $request->date_livraison);
+        }
+
+        // Filtrer par date de retour
+        if ($request->filled('date_retour')) {
+            $query->whereDate('date_retour', $request->date_retour);
+        }
+
+        $perPage = $request->get('per_page', 20);
+        $commandes = $query->orderBy('date_reception', 'DESC')->paginate($perPage);
         
         $services = DeliveryService::all();
         $coutLivraisons = CoutLivraison::all();

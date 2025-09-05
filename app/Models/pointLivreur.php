@@ -10,7 +10,8 @@ class PointLivreur extends Model
     protected $table = 'points_livreurs';
     protected $fillable = 
     [
-        'utilisateur_id', 
+        'utilisateur_id',
+        'delivery_service_id', 
         'recettes', 
         'depenses', 
         'gain_jour', 
@@ -20,6 +21,12 @@ class PointLivreur extends Model
         public function utilisateur()
         {
             return $this->belongsTo(Utilisateur::class, 'utilisateur_id', 'id');
+        }
+
+        // Relation avec le modèle DeliveryService
+        public function deliveryService()
+        {
+            return $this->belongsTo(DeliveryService::class, 'delivery_service_id', 'id');
         }
 
 

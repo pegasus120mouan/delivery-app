@@ -9,6 +9,15 @@
         </div>
         <div class="modal-body">
           <div class="mb-3">
+            <label for="delivery_service_id" class="form-label">Service de livraison</label>
+            <select name="delivery_service_id" id="delivery_service_id" class="form-control" required>
+                <option value="">Sélectionner un service de livraison</option>
+                @foreach ($delivery_services as $service)
+                    <option value="{{ $service->id }}">{{ $service->nom }}</option>
+                @endforeach
+            </select>
+          </div>
+          <div class="mb-3">
             <label for="utilisateur_id" class="form-label">Livreurs</label>
             <select name="utilisateur_id" id="utilisateur_id" class="form-control" required>
                 <option value="">Sélectionner un livreurs</option>
@@ -24,10 +33,6 @@
           <div class="mb-3">
             <label for="depenses" class="form-label">Dépenses</label>
             <input type="number" name="depenses" id="depenses" class="form-control" placeholder="Dépenses" required>
-          </div>
-          <div class="mb-3">
-            <label for="date_jour" class="form-label">Date du jour</label>
-            <input type="date" name="date_jour" id="date_jour" class="form-control" placeholder="Date du jour" required>
           </div>
         </div>
         <div class="modal-footer">

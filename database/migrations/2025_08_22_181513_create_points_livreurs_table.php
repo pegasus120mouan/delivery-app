@@ -14,15 +14,21 @@ return new class extends Migration
         Schema::create('points_livreurs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('utilisateur_id'); // clé étrangère vers utilisateurs.id
+            $table->unsignedBigInteger('delivery_service_id'); // clé étrangère vers delivery_services.id
             $table->integer('recettes')->default(0);
             $table->integer('depenses')->nullable();
             $table->integer('gain_jour')->virtualAs('recettes - IFNULL(depenses,0)'); // calculé automatiquement
             $table->date('date_jour')->default(now());
     
-            // Définition de la clé étrangère
+            // Définition des clés étrangères
             $table->foreign('utilisateur_id')
                   ->references('id')
                   ->on('utilisateurs')
+                  ->onDelete('cascade');
+            
+            $table->foreign('delivery_service_id')
+                  ->references('id')
+                  ->on('delivery_services')
                   ->onDelete('cascade');
         });
     }

@@ -131,6 +131,7 @@
 
              <thead>
                 <tr> 
+                    <th>Service de livraison</th>
                     <th>Livreur</th>
                     <th>Recettes</th>
                     <th>Depenses</th>
@@ -144,6 +145,7 @@
              <tbody>
                 @foreach ($pointsLivreurs as $pointLivreur)
                 <tr>
+                    <td>{{ $pointLivreur->deliveryService->nom ?? 'N/A' }}</td>
                     <td>{{ $pointLivreur->utilisateur->nom }}  {{ $pointLivreur->utilisateur->prenoms }}</td>
                     <td>{{ $pointLivreur->recettes}}</td>
                     <td>{{ $pointLivreur->depenses }}</td>
@@ -153,6 +155,7 @@
                     <a href="javascript:void(0)" 
    class="btn btn-primary editPointLivreurBtn" 
    data-id="{{ $pointLivreur->id }}"
+   data-delivery_service_id="{{ $pointLivreur->delivery_service_id }}"
    data-utilisateur_id="{{ $pointLivreur->utilisateur_id }}"
    data-utilisateur_nom="{{ $pointLivreur->utilisateur->nom }}"
    data-utilisateur_prenoms="{{ $pointLivreur->utilisateur->prenoms }}"
